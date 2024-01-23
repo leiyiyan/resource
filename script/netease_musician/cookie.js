@@ -2,7 +2,7 @@
  const $ = new Env("网易云Cookie")
 
  !(async () => {
-     if (!$.getdata("Netease_Musician_Cookie") || $.getdata("Netease_Musician_Cookie") == "") {
+    //  if (!$.getdata("Netease_Musician_Cookie") || $.getdata("Netease_Musician_Cookie") == "") {
  
          const cookie = $request.headers["cookie"]
          const userAgent = $request.headers["user-agent"]
@@ -13,7 +13,7 @@
          $.log($.name, "Cookie获取成功", cookie)
          $.msg($.name, "Cookie获取成功!", "cookie: " + cookie)
          $.done()
-     }
+    //  }
   
    }) ();
  
