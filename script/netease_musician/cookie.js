@@ -2,6 +2,7 @@
  const $ = new Env("网易云Cookie")
 
  !(async () => {
+  
     //  if (!$.getdata("Netease_Musician_Cookie") || $.getdata("Netease_Musician_Cookie") == "") {
  
          const cookie = $request.headers["cookie"]
