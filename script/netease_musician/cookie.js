@@ -3,10 +3,10 @@
 
  !(async () => {
   
-    //  if (!$.getdata("Netease_Musician_Cookie") || $.getdata("Netease_Musician_Cookie") == "") {
+     if (!$.getdata("Netease_Musician_Cookie") || $.getdata("Netease_Musician_Cookie") == "") {
  
-         const cookie = $request.headers["cookie"]
-         const userAgent = $request.headers["user-agent"]
+         const cookie = $request.headers["cookie"] || $request.headers["Cookie"]
+         const userAgent = $request.headers["user-agent"] || $request.headers["User-Agent"]
      
          $.setdata(cookie, "Netease_Musician_Cookie")
          $.setdata(userAgent, "Netease_Musician_UserAgent")
@@ -14,7 +14,7 @@
          $.log($.name, "Cookie获取成功", cookie)
          $.msg($.name, "Cookie获取成功!", "cookie: " + cookie)
          $.done()
-    //  }
+     }
   
    }) ();
  
