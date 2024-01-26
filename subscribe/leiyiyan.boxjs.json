@@ -17,6 +17,7 @@
       "keys": [
         "Netease_Musician_Cookie",
         "Netease_Musician_UserAgent",
+        "Netease_Musician_FansId",
         "开启云贝任务",
         "开启音乐人任务",
         "开启会员任务"
@@ -56,6 +57,14 @@
           "autoGrow": false,
           "rows": 1,
           "desc": "网易云音乐User-Agent数据"
+        },{
+          "id": "Netease_Musician_FansId",
+          "name": "网易云音乐粉丝ID数据",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": false,
+          "rows": 1,
+          "desc": "网易云音乐粉丝ID数据"
         }
       ]
     }
