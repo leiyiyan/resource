@@ -3,7 +3,10 @@
 #!author = leiyiyan
 #!homepage = https://github.com/leiyiyan/resource/loon/plugin
 #!icon = https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png
-#!date = 2024-01-26 10:05:00
+#!date = 2024-01-26 14:00:00
+#!select=开启音乐人任务, 启用, 禁用
+#!select=开启会员任务, 启用, 禁用
+#!select=开启云贝任务, 启用, 禁用
 #!input = Netease_Musician_Cookie
 #!input = Netease_Musician_UserAgent
 
