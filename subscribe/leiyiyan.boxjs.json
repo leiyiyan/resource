@@ -1,0 +1,63 @@
+{
+  "id": "Leiyiyan.sub",
+  "name": "Leiyiyan脚本订阅",
+  "author": "@leiyiyan",
+  "icon": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png",
+  "repo": "",
+  "apps": [
+    {
+      "id": "Leiyiyan_Netease",
+      "name": "网易云音乐签到",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png"
+      ],
+      "keys": [
+        "Netease_Musician_Cookie",
+        "Netease_Musician_UserAgent",
+        "开启云贝任务",
+        "开启音乐人任务",
+        "开启会员任务"
+      ],
+      "settings": [
+        {
+          "id": "开启云贝任务",
+          "name": "开启云贝任务",
+          "val": true,
+          "type": "boolean",
+          "desc": "默认开启"
+        },{
+          "id": "开启音乐人任务",
+          "name": "开启音乐人任务",
+          "val": true,
+          "type": "boolean",
+          "desc": "默认开启"
+        },{
+          "id": "开启会员任务",
+          "name": "开启会员任务",
+          "val": true,
+          "type": "boolean",
+          "desc": "默认开启"
+        },{
+          "id": "Netease_Musician_Cookie",
+          "name": "网易云音乐Cookie数据",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": false,
+          "rows": 1,
+          "desc": "网易云音乐Cookie数据"
+        },{
+          "id": "Netease_Musician_UserAgent",
+          "name": "网易云音乐User-Agent数据",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": false,
+          "rows": 1,
+          "desc": "网易云音乐User-Agent数据"
+        }
+      ]
+    }
+  ]
+}
