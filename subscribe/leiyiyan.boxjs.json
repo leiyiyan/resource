@@ -18,25 +18,25 @@
         "Netease_Musician_Cookie",
         "Netease_Musician_UserAgent",
         "Netease_Musician_FansId",
-        "开启云贝任务",
-        "开启音乐人任务",
-        "开启会员任务"
+        "Netease_Musician_Enable_Cloud_Shell_Task",
+        "Netease_Musician_Enable_Musician_Task",
+        "Netease_Musician_Enable_Vip_Task"
       ],
       "settings": [
         {
-          "id": "开启云贝任务",
+          "id": "Netease_Musician_Enable_Cloud_Shell_Task",
           "name": "开启云贝任务",
           "val": true,
           "type": "boolean",
           "desc": "默认开启"
         },{
-          "id": "开启音乐人任务",
+          "id": "Netease_Musician_Enable_Musician_Task",
           "name": "开启音乐人任务",
           "val": true,
           "type": "boolean",
           "desc": "默认开启"
         },{
-          "id": "开启会员任务",
+          "id": "Netease_Musician_Enable_Vip_Task",
           "name": "开启会员任务",
           "val": true,
           "type": "boolean",
@@ -46,16 +46,14 @@
           "name": "网易云音乐Cookie数据",
           "val": null,
           "type": "textarea",
-          "autoGrow": false,
-          "rows": 1,
+          "autoGrow": true,
           "desc": "网易云音乐Cookie数据"
         },{
           "id": "Netease_Musician_UserAgent",
           "name": "网易云音乐User-Agent数据",
           "val": null,
           "type": "textarea",
-          "autoGrow": false,
-          "rows": 1,
+          "autoGrow": true,
           "desc": "网易云音乐User-Agent数据"
         },{
           "id": "Netease_Musician_FansId",
