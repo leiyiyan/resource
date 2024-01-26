@@ -13,6 +13,10 @@
  脚本兼容：Surge、QuantumultX、Loon、Shadowrocket、Node.js
  只测试过Loon、QuantumultX，其它环境请自行尝试
  ----------------------------------------
+ Boxjs订阅：
+ https://github.com/leiyiyan/resource/blob/main/subscribe/leiyiyan.boxjs.json
+ ----------------------------------------
+ 
  Loon 配置如下：
  自动导入：
  https://raw.githubusercontent.com/leiyiyan/resource/main/loon/plugin/netease_musician/netease_musician.plugin
