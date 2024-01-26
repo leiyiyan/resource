@@ -15,7 +15,7 @@
  ----------------------------------------
  Loon 配置如下：
  自动导入：
- https://raw.githubusercontent.com/leiyiyan/tools/main/loon/plugin/netease_musician/netease_musician.plugin
+ https://raw.githubusercontent.com/leiyiyan/resource/main/loon/plugin/netease_musician/netease_musician.plugin
 
  手动导入：
  [Script]
@@ -31,10 +31,10 @@
  QuantumultX 配置如下：
 
  [task_local]
- 0 10 * * * https://raw.githubusercontent.com/leiyiyan/tools/main/script/netease_musician/task.js, tag=网易云音乐人, img-url=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png, enabled=true
+ 0 10 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=网易云音乐人, img-url=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png, enabled=true
 
  [rewrite_local]
- ^https:\/\/interface\.music\.163\.com\/weapi\/nmusician\/ url script-request-body https://raw.githubusercontent.com/leiyiyan/tools/main/script/netease_musician/cookie.js
+ ^https:\/\/interface\.music\.163\.com\/weapi\/nmusician\/ url script-request-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js
 
  [MITM]
  hostname = interface.music.163.com
