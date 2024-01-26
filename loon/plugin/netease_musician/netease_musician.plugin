@@ -2,7 +2,7 @@
 #!desc = 当前版本仅支持云贝: 签到；音乐人: 每日任务、推荐任务(发表主创说、发布动态、回复粉丝私信)；黑胶会员: 会员打卡、每日任务(♥️三首会员歌曲)，完成以上任务后可自动领取任务奖励。
 #!author = leiyiyan
 #!homepage = https://github.com/leiyiyan/resource/loon/plugin
-#!icon = https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png
+#!icon = https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png
 #!date = 2024-01-26 14:00:00
 #!select=开启音乐人任务, 启用, 禁用
 #!select=开启会员任务, 启用, 禁用
