@@ -1,22 +1,19 @@
 /**************************************
  * 脚本名称：网易云音乐人
  * 脚本作者：@leiyiyan
- * 更新日期：2024-01-26 14:00:00
+ * 更新日期：2024-01-26 15:50:00
  ============== 注意事项 =================
- 1、打开“网易云音乐”APP，点击左上角菜单，打开“创作者中心”，进入音乐人中心，等待抓取Cookie，提示获取成功即可；
+ 1、打开“网易云音乐”APP，点击左上角菜单，打开“创作者中心”，进入音乐人中心，点击下方“云豆商城”右侧的“xxx云豆待使用”，
+    再次点击上方的“收支记录”，进入收支记录页面后等待抓取Cookie，提示获取成功即可；
  2、如果需要完成“回复粉丝私信”任务，请确保您当前拥有粉丝，并且私信列表中存在粉丝的私信，最后务必将粉丝的备注修改为“回复粉丝私信”，否则无法完成；
  3、当前版本支持以下任务:
     云贝: 签到；
     音乐人: 每日任务、推荐任务(发表主创说、发布动态、回复粉丝私信)，完成以上任务后可自动领取云豆；
     黑胶会员: 会员打卡、每日任务(♥️三首会员歌曲)，完成以上任务后可自动领取成长值。
  ============== 使用教程 =================
- 脚本兼容：Surge、QuantumultX、Loon、Shadowrocket、Node.js
- 只测试过Loon、QuantumultX，其它环境请自行尝试
+ 脚本兼容：Surge、QuantumultX、Loon、Node.js
+ 脚本在Loon、Surge、QuantumultX，Node.js都能成功运行，其它环境请自行尝试
  ----------------------------------------
- Boxjs订阅：
- https://github.com/leiyiyan/resource/blob/main/subscribe/leiyiyan.boxjs.json
- ----------------------------------------
- 
  Loon 配置如下：
  自动导入：
  https://raw.githubusercontent.com/leiyiyan/resource/main/loon/plugin/netease_musician/netease_musician.plugin
@@ -27,21 +24,21 @@
  cron "10 0 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=音乐人任务
 
  # 获取Cookie
- http-request ^https:\/\/interface\.music\.163\.com\/weapi\/nmusician\/ script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js, tag = 获取Cookie
+ http-request ^https?:\/\/music\.163\.com\/weapi\/cloudbean\/records\/incomes script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js, tag = 获取Cookie
 
  [MitM]
- hostname = interface.music.163.com
+ hostname = music.163.com
  ----------------------------------------
  QuantumultX 配置如下：
 
  [task_local]
- 0 10 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=网易云音乐人, img-url=https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png, enabled=true
+ 0 10 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=网易云音乐人, img-url=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png, enabled=true
 
  [rewrite_local]
- ^https:\/\/interface\.music\.163\.com\/weapi\/nmusician\/ url script-request-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js
+ ^https?:\/\/music\.163\.com\/weapi\/cloudbean\/records\/incomes url script-request-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js
 
  [MITM]
- hostname = interface.music.163.com
+ hostname = music.163.com
  ============== 使用须知 =================
  1、此脚本仅用于学习研究，不保证其合法性、准确性、有效性，请根据情况自行判断，本人对此不承担任何保证责任。
  2、由于此脚本仅用于学习研究，您必须在下载后 24 小时内将所有内容从您的计算机或手机或任何存储设备中完全删除，若违反规定引起任何事件本人对此均不负责。
