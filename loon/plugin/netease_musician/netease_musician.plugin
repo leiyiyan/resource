@@ -1,9 +1,9 @@
 #!name = 网易云音乐人
-#!desc = 当前版本仅支持网易云音乐人每日任务、推荐任务(发表主创说、发布动态、回复粉丝私信)，可自动完成以上任务后并领取云豆。
+#!desc = 当前版本仅支持云贝: 签到；音乐人: 每日任务、推荐任务(发表主创说、发布动态、回复粉丝私信)；黑胶会员: 会员打卡、每日任务(♥️三首会员歌曲)，完成以上任务后可自动领取任务奖励。
 #!author = leiyiyan
 #!homepage = https://github.com/leiyiyan/resource/loon/plugin
 #!icon = https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png
-#!date = 2024-01-23 09:40:00
+#!date = 2024-01-26 10:05:00
 #!input = Netease_Musician_Cookie
 #!input = Netease_Musician_UserAgent
 
