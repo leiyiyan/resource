@@ -37,7 +37,7 @@
  QuantumultX 配置如下：
 
  [task_local]
- 0 10 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=网易云音乐人, img-url=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/NeteaseCloudMusic.png, enabled=true
+ 0 10 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=网易云音乐人, img-url=https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png, enabled=true
 
  [rewrite_local]
  ^https?:\/\/music\.163\.com\/weapi\/cloudbean\/records\/incomes url script-request-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js
