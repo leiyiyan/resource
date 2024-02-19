@@ -17,10 +17,10 @@
 
 [Script]
 # 主页
-http-request ^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/a\/config\/homeInit\/v3 script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/picc/picc_adblock.js, requires-body = true, tag = 主页去广告
+http-response ^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/a\/config\/homeInit\/v3 script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/picc/picc_adblock.js, requires-body = true, tag = 主页去广告
 
 # 我的页面
-http-request ^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/mpageconfig\/myPageConfigList\/v3 script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/picc/picc_adblock.js, requires-body = true, tag = 我的页面去广告
+http-response ^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/mpageconfig\/myPageConfigList\/v3 script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/picc/picc_adblock.js, requires-body = true, tag = 我的页面去广告
 
 
 [MitM]
