@@ -1,0 +1,27 @@
+#!name = 中国人保去广告
+#!desc = 中国人保去除启动开屏、主页、我的、人保头条、猜你喜欢页面广告。
+#!author = Sliverkiss
+#!homepage = https://github.com/Sliverkiss/QuantumultX
+#!icon = https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/picc.png
+#!date = 2024-02-19 15:35:00
+
+[Rewrite]
+# 人保头条
+^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/h\/headlines\/queryHeadlines reject-dict
+
+# 启动开屏
+^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/a\/update\/startupPage\/v1 reject-dict
+
+# 猜你喜欢
+^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/a\/config\/guessYouLike\/v3 reject-dict
+
+[Script]
+# 主页
+http-request ^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/a\/config\/homeInit\/v3 script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/picc/picc_adblock.js, requires-body = true, tag = 主页去广告
+
+# 我的页面
+http-request ^https:\/\/zgrb\.epicc\.com\.cn\/G-HAPP\/mpageconfig\/myPageConfigList\/v3 script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/picc/picc_adblock.js, requires-body = true, tag = 我的页面去广告
+
+
+[MitM]
+hostname = zgrb.epicc.com.cn
