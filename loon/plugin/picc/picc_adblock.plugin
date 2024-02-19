@@ -2,7 +2,7 @@
 #!desc = 中国人保去除启动开屏、主页、我的、人保头条、猜你喜欢页面广告。
 #!author = Sliverkiss
 #!homepage = https://github.com/Sliverkiss/QuantumultX
-#!icon = https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/picc.png
+#!icon = https://raw.githubusercontent.com/leiyiyan/resource/main/icons/picc.png
 #!date = 2024-02-19 15:35:00
 
 [Rewrite]
