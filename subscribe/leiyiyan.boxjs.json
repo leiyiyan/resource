@@ -28,8 +28,8 @@
           "id": "@codeServer.address",
           "name": "服务器地址",
           "val": "",
-          "type": "textarea",
-          "desc": "填入服务器地址，不包括/，如http://127.0.0.1"
+          "type": "text",
+          "desc": "填入服务器地址，如http://127.0.0.1:99"
         }
       ]
     },
