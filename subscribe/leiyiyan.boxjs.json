@@ -65,6 +65,40 @@
           "desc": "网易云音乐粉丝ID数据"
         }
       ]
+    },
+    {
+      "id": "Sliverkiss_Yrh",
+      "name": "悦然荟小程序",
+      "author": "@Sliverkiss",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
+      ],
+      "keys": [
+        "yrh_data"
+      ],
+      "settings": [
+        {
+          "id": "@yrh_data.appid",
+          "name": "appid",
+          "val": "",
+          "type": "textarea",
+          "desc": "填入悦然荟小程序的 appid"
+        },{
+          "id": "@yrh_data.bid",
+          "name": "bid",
+          "val": "",
+          "type": "textarea",
+          "desc": "填入悦然荟小程序的 bid"
+        },{
+          "id": "@yrh_data.version",
+          "name": "version",
+          "val": "",
+          "type": "textarea",
+          "desc": "填入悦然荟小程序的 version"
+        }
+      ]
     }
   ]
 }
