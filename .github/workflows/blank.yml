@@ -39,7 +39,7 @@ jobs:
         name: json-artifact
         path: ${{ github.workspace }}/subscribe/leiyiyan.icons.json
 
-    - name: Push to QuantumultX Repository
+    - name: Push to Repository
       run: |
         git config user.name "${{ github.actor }}"
         git config user.email "${{ github.actor }}@protonmail.com"
