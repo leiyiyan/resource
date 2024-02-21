@@ -14,7 +14,7 @@
 
 [Script]
 # 音乐人任务（默认0点10分执行，如需更改请自行修改corn表达式）
-cron "10 0 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, tag=音乐人任务
+cron "10 0 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/task.js, timeout=600, tag=音乐人任务
 
 # 获取Cookie
 http-request ^https?:\/\/music\.163\.com\/weapi\/cloudbean\/records\/incomes script-path = https://raw.githubusercontent.com/leiyiyan/resource/main/script/netease_musician/cookie.js, tag = 获取Cookie
