@@ -6,6 +6,34 @@
   "repo": "",
   "apps": [
     {
+      "id": "Code Server",
+      "name": "萝卜 Code",
+      "author": "@Luobook",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png"
+      ],
+      "keys": [
+        "codeServer"
+      ],
+      "settings": [
+        {
+          "id": "@codeServer.open",
+          "name": "开启code模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "@codeServer.address",
+          "name": "服务器地址",
+          "val": "",
+          "type": "textarea",
+          "desc": "填入服务器地址，不包括/，如http://127.0.0.1"
+        }
+      ]
+    },
+    {
       "id": "Leiyiyan_Netease",
       "name": "网易云音乐签到",
       "author": "@leiyiyan",
