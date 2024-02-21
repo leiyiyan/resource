@@ -75,6 +75,10 @@
         "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png",
         "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
       ],
+      "descs_html": [
+        "请自行抓包填写悦然荟小程序的 appid、bid、version",
+        "填写完成后记得点击此页面底端右下角的“保存”。"
+      ],
       "keys": [
         "yrh_data"
       ],
@@ -83,19 +87,19 @@
           "id": "@yrh_data.appid",
           "name": "appid",
           "val": "",
-          "type": "textarea",
+          "type": "text",
           "desc": "填入悦然荟小程序的 appid"
         },{
           "id": "@yrh_data.bid",
           "name": "bid",
           "val": "",
-          "type": "textarea",
+          "type": "text",
           "desc": "填入悦然荟小程序的 bid"
         },{
           "id": "@yrh_data.version",
           "name": "version",
           "val": "",
-          "type": "textarea",
+          "type": "text",
           "desc": "填入悦然荟小程序的 version"
         }
       ]
