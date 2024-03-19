@@ -125,6 +125,36 @@
       ]
     },
     {
+      "id": "Leiyiyan_Cfmoto",
+      "name": "春风摩托",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cfmoto.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cfmoto.png"
+      ],
+      "keys": [
+        "is_debug",
+        "cfmoto_data"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "cfmoto_data",
+          "name": "春风摩托Cookie数据",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "春风摩托Cookie数据"
+        }
+      ]
+    },
+    {
       "id": "Sliverkiss_Yrh",
       "name": "悦然荟小程序",
       "author": "@Sliverkiss",

@@ -1,0 +1,21 @@
+#!name = 春风摩托
+#!desc = 每日签到、会员任务、去广告，积分可兑换实物。
+#!author = leiyiyan
+#!homepage = https://github.com/leiyiyan/resource
+#!icon = https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cfmoto.png
+#!date = 2024-3-19 13:48:20
+
+[Script]
+# 获取 Cookie
+http-response ^https:\/\/c\.cfmoto\.com\/jv\/user\/user_info script-path=https://github.com/leiyiyan/resource/blob/main/script/cfmoto/cfmoto.js, requires-body=true, timeout=60, tag=春风摩托 Cookie
+# 脚本任务
+cron "0 7 * * *" script-path=https://github.com/leiyiyan/resource/blob/main/script/cfmoto/cfmoto.js, tag=春风摩托
+
+[Rewrite]
+# 开屏广告
+^https:\/\/c\.cfmoto\.com\/cfmotoservermall\/app\/ad$ reject-dict
+# 弹窗广告
+^https:\/\/c\.cfmoto\.com\/cfmotoservermall\/app\/popwindow reject-dict
+
+[MITM]
+hostname = c.cfmoto.com
