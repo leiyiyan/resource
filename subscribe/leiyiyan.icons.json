@@ -3,8 +3,8 @@
   "description": "脚本图标订阅",
   "icons": [
     {
-      "name": "yrh.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
+      "name": "zmhy.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zmhy.png"
     },
     {
       "name": "pyy.png",
@@ -15,8 +15,12 @@
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/picc.png"
     },
     {
-      "name": "zmhy.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zmhy.png"
+      "name": "aliyun_web.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/aliyun_web.png"
+    },
+    {
+      "name": "yrh.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
     },
     {
       "name": "netease_music.png",
