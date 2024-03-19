@@ -95,6 +95,36 @@
       ]
     },
     {
+      "id": "Leiyiyan_Aliyun_Web",
+      "name": "网易云社区",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/aliyun_web.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/aliyun_web.png"
+      ],
+      "keys": [
+        "is_debug",
+        "aliyunWeb_data"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "aliyunWeb_data",
+          "name": "阿里云社区Cookie数据",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "阿里云社区Cookie数据"
+        }
+      ]
+    },
+    {
       "id": "Sliverkiss_Yrh",
       "name": "悦然荟小程序",
       "author": "@Sliverkiss",
