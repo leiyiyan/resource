@@ -7,9 +7,9 @@
 
 [Script]
 # 获取 Cookie
-http-response ^https:\/\/c\.cfmoto\.com\/jv\/user\/user_info script-path=https://github.com/leiyiyan/resource/blob/main/script/cfmoto/cfmoto.js, requires-body=true, timeout=60, tag=春风摩托 Cookie
+http-response ^https:\/\/c\.cfmoto\.com\/jv\/user\/user_info script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/cfmoto/cfmoto.js, requires-body=true, timeout=60, tag=春风摩托 Cookie
 # 脚本任务
-cron "0 7 * * *" script-path=https://github.com/leiyiyan/resource/blob/main/script/cfmoto/cfmoto.js, tag=春风摩托
+cron "0 7 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/cfmoto/cfmoto.js, tag=春风摩托
 
 [Rewrite]
 # 开屏广告
