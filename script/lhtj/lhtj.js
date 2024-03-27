@@ -9,7 +9,7 @@
 图标：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/lhtj.png
 
 [Script]
-http-request ^https?:\/\/gw2c\-hw\-open\.longfor\.com\/lmarketing\-task\-api\-mvc\-prod\/openapi\/task\/v1\/signature\/clock script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/lhtj/lhtj.js, requires-body=true, timeout=60, tag=龙湖天街获取Cookie
+http-request ^https?:\/\/gw2c\-hw\-open\.longfor\.com\/lmarketing\-task\-api\-mvc\-prod\/openapi\/task\/v1\/signature\/clock script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/lhtj/lhtj.js, timeout=60, tag=龙湖天街获取Cookie
 
 [MITM]
 hostname = gw2c-hw-open.longfor.com
@@ -246,8 +246,8 @@ async function getCookie() {
   try {
     if ($request && $request.method != 'OPTIONS'){
       const header = $request.headers;
-      const body = $.toObj($request.body);
-      if (!(header.cookie && body)) throw new Error("获取Cookie错误，值为空");
+      // const body = $.toObj($request.body);
+      if (!(header.cookie)) throw new Error("获取Cookie错误，值为空");
       const newData = {
         "userName": '微信用户',
         'x-lf-dxrisk-token': header['x-lf-dxrisk-token'],
