@@ -1,7 +1,7 @@
 /*
 ------------------------------------------
 @Author: Leiyiyan
-@Date: 2024-03-27 15:21:00
+@Date: 2024-03-27 15:25:00
 @Description: 龙湖天街小程序签到、抽奖
 ------------------------------------------
 获取 Cookie：打开龙湖天街小程序，进入 我的 - 签到赚珑珠 - 任务赚奖励 - 马上签到。
@@ -98,7 +98,7 @@ async function signin(user) {
                 'token': user.token,
                 'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
                 'x-gaia-api-key': 'c06753f1-3e68-437d-b592-b94656ea5517',
-                //'x-lf-bu-code': user['x-lf-bu-code'],
+                'x-lf-bu-code': user['x-lf-bu-code'],
                 'x-lf-channel': user['x-lf-channel'],
                 'origin': 'https://longzhu.longfor.com',
                 'referer': 'https://longzhu.longfor.com/',
