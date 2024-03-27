@@ -1,7 +1,7 @@
 /*
 ------------------------------------------
 @Author: Leiyiyan
-@Date: 2024-03-27 10:00:00
+@Date: 2024-03-27 14:40:00
 @Description: 龙湖天街小程序签到、抽奖
 ------------------------------------------
 获取 Cookie：打开龙湖天街小程序，进入 我的 - 签到赚珑珠 - 任务赚奖励 - 马上签到。
@@ -245,7 +245,7 @@ async function getBalance(user) {
 async function getCookie() {
   try {
     if ($request && $request.method != 'OPTIONS'){
-      const header = $request.headers;
+      const header = ObjectKeys2LowerCase($request.headers);
       // const body = $.toObj($request.body);
       if (!(header.cookie)) throw new Error("获取Cookie错误，值为空");
       const newData = {
@@ -294,7 +294,7 @@ async function sendMsg(a) { a && ($.isNode() ? await notify.sendNotify($.name, a
 function DoubleLog(o) { o && ($.log(`${o}`), $.notifyMsg.push(`${o}`)) };
 function debug(g, e = "debug") { "true" === $.is_debug && ($.log(`\n-----------${e}------------\n`), $.log("string" == typeof g ? g : $.toStr(g) || `debug error => t=${g}`), $.log(`\n-----------${e}------------\n`)) }
 //From xream's ObjectKeys2LowerCase
-function ObjectKeys2LowerCase(e) { return e = Object.fromEntries(Object.entries(e).map((([e, t]) => [e.toLowerCase(), t]))), new Proxy(e, { get: function (e, t, r) { return Reflect.get(e, t.toLowerCase(), r) }, set: function (e, t, r, n) { return Reflect.set(e, t.toLowerCase(), r, n) } }) }
+const ObjectKeys2LowerCase = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.toLowerCase(), v]))
 //From sliverkiss's Request
 async function Request(t) { "string" == typeof t && (t = { url: t }); try { if (!t?.url) throw new Error("[发送请求] 缺少 url 参数"); let { url: o, type: e, headers: r = {}, body: s, params: a, dataType: n = "form", resultType: u = "data" } = t; const p = e ? e?.toLowerCase() : "body" in t ? "post" : "get", c = o.concat("post" === p ? "?" + $.queryStr(a) : ""), i = t.timeout ? $.isSurge() ? t.timeout / 1e3 : t.timeout : 1e4; "json" === n && (r["Content-Type"] = "application/json;charset=UTF-8"); const y = s && "form" == n ? $.queryStr(s) : $.toStr(s), l = { ...t, ...t?.opts ? t.opts : {}, url: c, headers: r, ..."post" === p && { body: y }, ..."get" === p && a && { params: a }, timeout: i }, m = $.http[p.toLowerCase()](l).then((t => "data" == u ? $.toObj(t.body) || t.body : $.toObj(t) || t)).catch((t => $.log(`❌请求发起失败！原因为：${t}`))); return Promise.race([new Promise(((t, o) => setTimeout((() => o("当前请求已超时")), i))), m]) } catch (t) { console.log(`❌请求发起失败！原因为：${t}`) } }
 //From chavyleung's Env.js
