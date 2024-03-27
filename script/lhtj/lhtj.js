@@ -1,7 +1,7 @@
 /*
 ------------------------------------------
 @Author: Leiyiyan
-@Date: 2024-03-27 14:40:00
+@Date: 2024-03-27 15:17:00
 @Description: 龙湖天街小程序签到、抽奖
 ------------------------------------------
 获取 Cookie：打开龙湖天街小程序，进入 我的 - 签到赚珑珠 - 任务赚奖励 - 马上签到。
@@ -28,7 +28,6 @@ const $ = new Env("龙湖天街");
 const ckName = "lhtj_data";
 const userCookie = $.toObj($.isNode() ? process.env[ckName] : $.getdata(ckName)) || [];
 //notify
-const Notify = 1;//0为关闭通知,1为打开通知,默认为1
 const notify = $.isNode() ? require('./sendNotify') : '';
 $.notifyMsg = []
 //debug
@@ -40,254 +39,251 @@ const _headers = {}
 
 //------------------------------------------
 const fetch = async (o) => {
-  try {
-    if (typeof o === 'string') o = { url: o };
-    if (o?.url?.startsWith("/") || o?.url?.startsWith(":")) o.url = baseUrl + o.url
-    const res = await Request({ ...o, headers: o.headers || _headers, url: o.url })
-    debug(res, o?.url?.replace(/\/+$/, '').substring(o?.url?.lastIndexOf('/') + 1));
-    if (res?.code == 500 || res?.code == 409) throw new Error(`用户需要去登录`);
-    return res;
-  } catch (e) {
-    $.ckStatus = false;
-    $.log(`⛔️ 请求发起失败！${e}`);
-  }
+    try {
+        if (typeof o === 'string') o = { url: o };
+        if (o?.url?.startsWith("/") || o?.url?.startsWith(":")) o.url = baseUrl + o.url
+        const res = await Request({ ...o, headers: o.headers || _headers, url: o.url })
+        debug(res, o?.url?.replace(/\/+$/, '').substring(o?.url?.lastIndexOf('/') + 1));
+        if (res?.message.match(/登录已过期|用户未登录/)) throw new Error(`用户需要去登录`);
+        return res;
+    } catch (e) {
+        $.ckStatus = false;
+        $.log(`⛔️ 请求发起失败！${e}`);
+    }
 }
 async function main() {
-  try {
-    //check accounts
-    if (!userCookie?.length) throw new Error("找不到可用的帐户");
-    $.log(`⚙️ 发现 ${userCookie?.length ?? 0} 个帐户\n`);
-    let index = 0;
-    //doTask of userList
-    for (let user of userCookie) {
-      //init of user
-      $.log(`🚀 开始任务`),
-        $.notifyMsg = [],
-        $.ckStatus = true,
-        $.title = "",
-        $.avatar = "";
+    try {
+        //check accounts
+        if (!userCookie?.length) throw new Error("找不到可用的帐户");
+        $.log(`⚙️ 发现 ${userCookie?.length ?? 0} 个帐户\n`);
+        let index = 0;
+        //doTask of userList
+        for (let user of userCookie) {
+            //init of user
+            $.log(`🚀 开始任务`),
+                $.notifyMsg = [],
+                $.ckStatus = true,
+                $.title = "",
+                $.avatar = "";
 
-        // 签到
-        const reward_num = await signin(user);
-      if ($.ckStatus) {
-        await lotterySignin(user)
-        await lotteryClock(user)
-        const {nick_name, growth_value, level , head_portrait} = await getUserInfo(user)
-        const { balance } = await getBalance(user)
-        $.avatar = head_portrait;
-        $.title = `本次运行共获得${reward_num}积分`
-        DoubleLog(`当前用户:${nick_name}\n成长值: ${growth_value}, 等级: V${level}, 珑珠: ${balance}\n`)
-      } else {
-        DoubleLog(`⛔️ 「${user.userName ?? `账号${index}`}」check ck error!`)
-      }
-      //notify
-      await sendMsg($.notifyMsg.join("\n"));
+            // 签到
+            const reward_num = await signin(user);
+            if ($.ckStatus) {
+                await lotterySignin(user)
+                await lotteryClock(user)
+                const { nick_name, growth_value, level, head_portrait } = await getUserInfo(user)
+                const { balance } = await getBalance(user)
+                $.avatar = head_portrait;
+                $.title = `本次运行共获得${reward_num}积分`
+                DoubleLog(`当前用户:${nick_name}\n成长值: ${growth_value}  等级: V${level}  珑珠: ${balance}`)
+            } else {
+                DoubleLog(`⛔️ 「${user.userName ?? `账号${index}`}」check ck error!`)
+            }
+            //notify
+            await sendMsg($.notifyMsg.join("\n"));
+        }
+    } catch (e) {
+        throw e
     }
-  } catch (e) {
-    throw e
-  }
 }
 
 //签到
 async function signin(user) {
-  try {
-    const opts = {
-      url: "https://gw2c-hw-open.longfor.com/lmarketing-task-api-mvc-prod/openapi/task/v1/signature/clock",
-      headers: {
-        'cookie': user.cookie,
-        'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-        'token': user.token,
-        'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
-        'x-gaia-api-key': 'c06753f1-3e68-437d-b592-b94656ea5517',
-        'x-lf-bu-code': user['x-lf-bu-code'],
-        'x-lf-channel': user['x-lf-channel'],
-        'origin': 'https://longzhu.longfor.com',
-        'referer': 'https://longzhu.longfor.com/',
-        'x-lf-dxrisk-source': user['x-lf-dxrisk-source'],
-        'x-lf-usertoken': user['x-lf-usertoken']
-      },
-      type: 'post',
-      dataType: "json",
-      body: {
-        'activity_no': '11111111111686241863606037740000'
-      }
+    try {
+        const opts = {
+            url: "https://gw2c-hw-open.longfor.com/lmarketing-task-api-mvc-prod/openapi/task/v1/signature/clock",
+            headers: {
+                'cookie': user.cookie,
+                'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
+                'token': user.token,
+                'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
+                'x-gaia-api-key': 'c06753f1-3e68-437d-b592-b94656ea5517',
+                //'x-lf-bu-code': user['x-lf-bu-code'],
+                'x-lf-channel': user['x-lf-channel'],
+                'origin': 'https://longzhu.longfor.com',
+                'referer': 'https://longzhu.longfor.com/',
+                'x-lf-dxrisk-source': user['x-lf-dxrisk-source'],
+                'x-lf-usertoken': user['x-lf-usertoken']
+            },
+            type: 'post',
+            dataType: "json",
+            body: {
+                'activity_no': '11111111111686241863606037740000'
+            }
+        }
+        let res = await fetch(opts);
+        const reward_num = res?.data?.is_popup == 1 ? res.data?.reward_info[0]?.reward_num : 0
+        $.log(`${$.doFlag[res?.data?.is_popup == 1]} ${res?.data?.is_popup == 1 ? '签到成功, 获得' + res?.data?.reward_info[0]?.reward_num + '分' : '今日已签到'}\n`);
+        return reward_num
+    } catch (e) {
+        $.log(`⛔️ 签到失败！${e}\n`)
     }
-    let res = await fetch(opts);
-    const reward_num = res.data.is_popup == 1 ? res.data.reward_info[0].reward_num : 0
-    $.log(`${$.doFlag[res.data.is_popup == 1]} ${res.data.is_popup == 1 ? '签到成功, 获得' + res.data.reward_info[0].reward_num + '分' : '今日已签到'}\n`);
-    return reward_num
-  } catch (e) {
-    $.log(`⛔️ 签到失败！${e}\n`)
-  }
 }
 // 抽奖签到
 async function lotterySignin(user) {
-  try {
-    const opts = {
-      url: "https://gw2c-hw-open.longfor.com/llt-gateway-prod/api/v1/activity/auth/lottery/sign",
-      headers: {
-        'cookie': user.cookie,
-        'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-        'authtoken': user.token,
-        'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
-        'x-gaia-api-key': '2f9e3889-91d9-4684-8ff5-24d881438eaf',
-        'bucode': user['x-lf-bu-code'],
-        'channel': user['x-lf-channel'],
-        'origin': 'https://llt.longfor.com',
-        'referer': 'https://llt.longfor.com/',
-        'x-lf-dxrisk-source': user['x-lf-dxrisk-source']
-      },
-      type: 'post',
-      dataType: "json",
-      body: {
-        "component_no": "CV11418B3563OITB",
-        "activity_no": "AP24I022W89IUHFR"
-      }
+    try {
+        const opts = {
+            url: "https://gw2c-hw-open.longfor.com/llt-gateway-prod/api/v1/activity/auth/lottery/sign",
+            headers: {
+                'cookie': user.cookie,
+                'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
+                'authtoken': user.token,
+                'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
+                'x-gaia-api-key': '2f9e3889-91d9-4684-8ff5-24d881438eaf',
+                'bucode': user['x-lf-bu-code'],
+                'channel': user['x-lf-channel'],
+                'origin': 'https://llt.longfor.com',
+                'referer': 'https://llt.longfor.com/',
+                'x-lf-dxrisk-source': user['x-lf-dxrisk-source']
+            },
+            type: 'post',
+            dataType: "json",
+            body: {
+                "component_no": "CV11418B3563OITB",
+                "activity_no": "AP24I022W89IUHFR"
+            }
+        }
+        let res = await fetch(opts);
+        $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '签到成功, 获得' + res.data.chance + '次抽奖机会' : res.message}\n`);
+    } catch (e) {
+        $.log(`⛔️ 抽奖签到失败！${e}\n`)
     }
-    let res = await fetch(opts);
-    $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '签到成功, 获得' + res.data.chance + '次抽奖机会' : res.message}\n`);
-  } catch (e) {
-    $.log(`⛔️ 抽奖签到失败！${e}\n`)
-  }
 }
 // 抽奖
 async function lotteryClock(user) {
-  try {
-    const opts = {
-      url: "https://gw2c-hw-open.longfor.com/llt-gateway-prod/api/v1/activity/auth/lottery/click",
-      headers: {
-        'Cookie': user.cookie,
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-        'authtoken': user.token,
-        'X-LF-DXRisk-Token': user['x-lf-dxrisk-token'],
-        'x-gaia-api-key': '2f9e3889-91d9-4684-8ff5-24d881438eaf',
-        'bucode': user['x-lf-bu-code'],
-        'channel': user['x-lf-channel'],
-        'Origin': 'https://llt.longfor.com',
-        'Referer': 'https://llt.longfor.com/',
-        'X-LF-DXRisk-Source': user['x-lf-dxrisk-source']
-      },
-      type: 'post',
-      dataType: "json",
-      body: {
-        "component_no": "CV11418B3563OITB",
-        "activity_no": "AP24I022W89IUHFR"
-      }
+    try {
+        const opts = {
+            url: "https://gw2c-hw-open.longfor.com/llt-gateway-prod/api/v1/activity/auth/lottery/click",
+            headers: {
+                'Cookie': user.cookie,
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
+                'authtoken': user.token,
+                'X-LF-DXRisk-Token': user['x-lf-dxrisk-token'],
+                'x-gaia-api-key': '2f9e3889-91d9-4684-8ff5-24d881438eaf',
+                'bucode': user['x-lf-bu-code'],
+                'channel': user['x-lf-channel'],
+                'Origin': 'https://llt.longfor.com',
+                'Referer': 'https://llt.longfor.com/',
+                'X-LF-DXRisk-Source': user['x-lf-dxrisk-source']
+            },
+            type: 'post',
+            dataType: "json",
+            body: {
+                "component_no": "CV11418B3563OITB",
+                "activity_no": "AP24I022W89IUHFR"
+            }
+        }
+        let res = await fetch(opts);
+        let reward_num = '';
+        let prize_name = '谢谢参与';
+        if (res.code == '0000') {
+            reward_num = res.data.reward_num || '';
+            prize_name = res.data.prize_name || '谢谢参与';
+        }
+        $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '抽奖成功, 获得' + reward_num + prize_name : res.message}\n`);
+    } catch (e) {
+        $.log(`⛔️ 抽奖失败！${e}\n`)
     }
-    let res = await fetch(opts);
-    let reward_num = '';
-    let prize_name = '谢谢参与';
-    if(res.code == '0000') {
-      reward_num = res.data.reward_num || '';
-      prize_name = res.data.prize_name || '谢谢参与';
-    }
-    $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '抽奖成功, 获得' + reward_num +  prize_name : res.message}\n`);
-  } catch (e) {
-    $.log(`⛔️ 抽奖失败！${e}\n`)
-  }
 }
 //查询用户信息
 async function getUserInfo(user) {
-  try {
-    const opts = {
-      url: "https://longzhu-api.longfor.com/lmember-member-open-api-prod/api/member/v1/mine-info",
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-        'Referer': 'https://servicewechat.com/wx50282644351869da/424/page-frame.html',
-        'token': user.token,
-        'X-Gaia-Api-Key': 'd1eb973c-64ec-4dbe-b23b-22c8117c4e8e'
-      },
-      type: 'post',
-      dataType: "json",
-      body: {
-        "channel": user['x-lf-channel'],
-        "bu_code": user['x-lf-bu-code'],
-        "token": user.token
-      }
+    try {
+        const opts = {
+            url: "https://longzhu-api.longfor.com/lmember-member-open-api-prod/api/member/v1/mine-info",
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
+                'Referer': 'https://servicewechat.com/wx50282644351869da/424/page-frame.html',
+                'token': user.token,
+                'X-Gaia-Api-Key': 'd1eb973c-64ec-4dbe-b23b-22c8117c4e8e'
+            },
+            type: 'post',
+            dataType: "json",
+            body: {
+                "channel": user['x-lf-channel'],
+                "bu_code": user['x-lf-bu-code'],
+                "token": user.token
+            }
+        }
+        let res = await fetch(opts);
+        let growth_value = res.data.growth_value || 0;
+        $.log(`🎉 ${res.code == '0000' ? '您当前成长值: ' + growth_value : res.message}\n`);
+        return res.data
+    } catch (e) {
+        $.log(`⛔️ 查询用户信息失败！${e}\n`)
     }
-    let res = await fetch(opts);
-    let growth_value = res.data.growth_value || 0;
-    $.log(`🎉 ${res.code == '0000' ? '您当前成长值: ' + growth_value : res.message}\n`);
-    return res.data
-  } catch (e) {
-    $.log(`⛔️ 查询用户信息失败！${e}\n`)
-  }
 }
 //查询珑珠
 async function getBalance(user) {
-  try {
-    const opts = {
-      url: "https://longzhu-api.longfor.com/lmember-member-open-api-prod/api/member/v1/balance",
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-        'Referer': 'https://servicewechat.com/wx50282644351869da/424/page-frame.html',
-        'token': user.token,
-        'X-Gaia-Api-Key': 'd1eb973c-64ec-4dbe-b23b-22c8117c4e8e'
-      },
-      type: 'post',
-      dataType: "json",
-      body: {
-        "channel": user['x-lf-channel'],
-        "bu_code": user['x-lf-bu-code'],
-        "token": user.token
-      }
+    try {
+        const opts = {
+            url: "https://longzhu-api.longfor.com/lmember-member-open-api-prod/api/member/v1/balance",
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
+                'Referer': 'https://servicewechat.com/wx50282644351869da/424/page-frame.html',
+                'token': user.token,
+                'X-Gaia-Api-Key': 'd1eb973c-64ec-4dbe-b23b-22c8117c4e8e'
+            },
+            type: 'post',
+            dataType: "json",
+            body: {
+                "channel": user['x-lf-channel'],
+                "bu_code": user['x-lf-bu-code'],
+                "token": user.token
+            }
+        }
+        let res = await fetch(opts);
+        let balance = res.data.balance || 0;
+        let expiring_lz = res.data.expiring_lz || 0;
+        $.log(`🎉 ${res.code == '0000' ? '您当前珑珠: ' + balance + ', 即将过期: ' + expiring_lz : res.message}\n`);
+        return res.data
+    } catch (e) {
+        $.log(`⛔️ 查询用户珑珠失败！${e}\n`)
     }
-    let res = await fetch(opts);
-    let balance = res.data.balance || 0;
-    let expiring_lz = res.data.expiring_lz || 0;
-    $.log(`🎉 ${res.code == '0000' ? '您当前珑珠: ' + balance + ', 即将过期: ' +  expiring_lz : res.message}\n`);
-    return res.data
-  } catch (e) {
-    $.log(`⛔️ 查询用户珑珠失败！${e}\n`)
-  }
 }
 //获取Cookie
 async function getCookie() {
-  try {
-    if ($request && $request.method === 'OPTIONS') throw new Error("Incorrect script execution method,only cron is permitted");
-  
-    const header = ObjectKeys2LowerCase($request.headers);
-    // const body = $.toObj($request.body);
-    if (!(header.cookie)) throw new Error("获取Cookie错误，值为空");
-    const newData = {
-      "userName": '微信用户',
-      'x-lf-dxrisk-token': header['x-lf-dxrisk-token'],
-      "x-lf-channel": header['x-lf-channel'],
-      "token": header.token,
-      'x-lf-usertoken': header['x-lf-usertoken'],
-      "cookie": header.cookie,
-      "x-lf-bu-code": header['x-lf-bu-code'],
-      'x-lf-dxrisk-source': header['x-lf-dxrisk-source']
-    }
-    const index = userCookie.findIndex(e => e.token == newData.token);
-    index !== -1 ? userCookie[index] = newData : userCookie.push(newData);
-    $.setjson(userCookie, ckName);
-    $.msg($.name, `获取Cookie成功!`, ``)
-      
-    
+    try {
+        if ($request && $request.method === 'OPTIONS') return;
 
-  } catch (e) {
-    throw e;
-  }
+        const header = ObjectKeys2LowerCase($request.headers);
+        if (!header.cookie) throw new Error("获取Cookie错误，值为空");
+
+        const newData = {
+            "userName": '微信用户',
+            'x-lf-dxrisk-token': header['x-lf-dxrisk-token'],
+            "x-lf-channel": header['x-lf-channel'],
+            "token": header.token,
+            'x-lf-usertoken': header['x-lf-usertoken'],
+            "cookie": header.cookie,
+            "x-lf-bu-code": header['x-lf-bu-code'],
+            'x-lf-dxrisk-source': header['x-lf-dxrisk-source']
+        }
+        const index = userCookie.findIndex(e => e.token == newData.token);
+        index !== -1 ? userCookie[index] = newData : userCookie.push(newData);
+        $.setjson(userCookie, ckName);
+        $.msg($.name, `🎉获取Cookie成功!`, ``)
+    } catch (e) {
+        throw e;
+    }
 }
 
 
 //主程序执行入口
 !(async () => {
-  try {
-    if (typeof $request != "undefined") {
-      await getCookie();
-    } else {
-      await main();
+    try {
+        if (typeof $request != "undefined") {
+            await getCookie();
+        } else {
+            await main();
+        }
+    } catch (e) {
+        throw e;
     }
-  } catch (e) {
-    throw e;
-  }
 })()
-  .catch((e) => { $.logErr(e), $.msg($.name, `⛔️ script run error!`, e.message || e) })
-  .finally(async () => {
-    $.done({ ok: 1 });
-  });
+    .catch((e) => { $.logErr(e), $.msg($.name, `⛔️ script run error!`, e.message || e) })
+    .finally(async () => {
+        $.done({ ok: 1 });
+    });
 
 /** ---------------------------------固定不动区域----------------------------------------- */
 //prettier-ignore
@@ -295,7 +291,7 @@ async function sendMsg(a) { a && ($.isNode() ? await notify.sendNotify($.name, a
 function DoubleLog(o) { o && ($.log(`${o}`), $.notifyMsg.push(`${o}`)) };
 function debug(g, e = "debug") { "true" === $.is_debug && ($.log(`\n-----------${e}------------\n`), $.log("string" == typeof g ? g : $.toStr(g) || `debug error => t=${g}`), $.log(`\n-----------${e}------------\n`)) }
 //From xream's ObjectKeys2LowerCase
-const ObjectKeys2LowerCase = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.toLowerCase(), v]))
+function ObjectKeys2LowerCase(obj) { return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.toLowerCase(), v])) };
 //From sliverkiss's Request
 async function Request(t) { "string" == typeof t && (t = { url: t }); try { if (!t?.url) throw new Error("[发送请求] 缺少 url 参数"); let { url: o, type: e, headers: r = {}, body: s, params: a, dataType: n = "form", resultType: u = "data" } = t; const p = e ? e?.toLowerCase() : "body" in t ? "post" : "get", c = o.concat("post" === p ? "?" + $.queryStr(a) : ""), i = t.timeout ? $.isSurge() ? t.timeout / 1e3 : t.timeout : 1e4; "json" === n && (r["Content-Type"] = "application/json;charset=UTF-8"); const y = s && "form" == n ? $.queryStr(s) : $.toStr(s), l = { ...t, ...t?.opts ? t.opts : {}, url: c, headers: r, ..."post" === p && { body: y }, ..."get" === p && a && { params: a }, timeout: i }, m = $.http[p.toLowerCase()](l).then((t => "data" == u ? $.toObj(t.body) || t.body : $.toObj(t) || t)).catch((t => $.log(`❌请求发起失败！原因为：${t}`))); return Promise.race([new Promise(((t, o) => setTimeout((() => o("当前请求已超时")), i))), m]) } catch (t) { console.log(`❌请求发起失败！原因为：${t}`) } }
 //From chavyleung's Env.js
