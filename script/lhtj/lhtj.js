@@ -1,7 +1,7 @@
 /*
 ------------------------------------------
 @Author: Leiyiyan
-@Date: 2024-03-27 15:17:00
+@Date: 2024-03-27 15:21:00
 @Description: 龙湖天街小程序签到、抽奖
 ------------------------------------------
 获取 Cookie：打开龙湖天街小程序，进入 我的 - 签到赚珑珠 - 任务赚奖励 - 马上签到。
@@ -112,7 +112,7 @@ async function signin(user) {
             }
         }
         let res = await fetch(opts);
-        const reward_num = res?.data?.is_popup == 1 ? res.data?.reward_info[0]?.reward_num : 0
+        const reward_num = res?.data?.is_popup == 1 ? res?.data?.reward_info[0]?.reward_num : 0
         $.log(`${$.doFlag[res?.data?.is_popup == 1]} ${res?.data?.is_popup == 1 ? '签到成功, 获得' + res?.data?.reward_info[0]?.reward_num + '分' : '今日已签到'}\n`);
         return reward_num
     } catch (e) {
@@ -144,7 +144,7 @@ async function lotterySignin(user) {
             }
         }
         let res = await fetch(opts);
-        $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '签到成功, 获得' + res.data.chance + '次抽奖机会' : res.message}\n`);
+        $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '签到成功, 获得' + res?.data?.chance + '次抽奖机会' : res.message}\n`);
     } catch (e) {
         $.log(`⛔️ 抽奖签到失败！${e}\n`)
     }
@@ -177,8 +177,8 @@ async function lotteryClock(user) {
         let reward_num = '';
         let prize_name = '谢谢参与';
         if (res.code == '0000') {
-            reward_num = res.data.reward_num || '';
-            prize_name = res.data.prize_name || '谢谢参与';
+            reward_num = res?.data?.reward_num || '';
+            prize_name = res?.data?.prize_name || '谢谢参与';
         }
         $.log(`${$.doFlag[res?.code == '0000']} ${res.code == '0000' ? '抽奖成功, 获得' + reward_num + prize_name : res.message}\n`);
     } catch (e) {
@@ -205,9 +205,9 @@ async function getUserInfo(user) {
             }
         }
         let res = await fetch(opts);
-        let growth_value = res.data.growth_value || 0;
+        let growth_value = res?.data?.growth_value || 0;
         $.log(`🎉 ${res.code == '0000' ? '您当前成长值: ' + growth_value : res.message}\n`);
-        return res.data
+        return res?.data
     } catch (e) {
         $.log(`⛔️ 查询用户信息失败！${e}\n`)
     }
@@ -232,10 +232,10 @@ async function getBalance(user) {
             }
         }
         let res = await fetch(opts);
-        let balance = res.data.balance || 0;
-        let expiring_lz = res.data.expiring_lz || 0;
+        let balance = res?.data.balance || 0;
+        let expiring_lz = res?.data.expiring_lz || 0;
         $.log(`🎉 ${res.code == '0000' ? '您当前珑珠: ' + balance + ', 即将过期: ' + expiring_lz : res.message}\n`);
-        return res.data
+        return res?.data
     } catch (e) {
         $.log(`⛔️ 查询用户珑珠失败！${e}\n`)
     }
