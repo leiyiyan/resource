@@ -3,7 +3,7 @@
  * 活动规则：完成每日任务，每日可获得 148 万商分
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-03-29 15:39
+ * 更新时间：2024-03-30 00:18
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -93,13 +93,13 @@ script-providers:
     
           // 获取用户信息, 不打印日志
           await getUserInfo();
-          $.wait(2000);
+          await $.wait(2000);
           // 无效 token 跳出
           if (!$.is_login) continue;  
           
           // 获取任务列表
           await getTask();
-          $.wait(2000);
+          await $.wait(2000);
           // 获取用户信息, 打印日志
           await getUserInfo(true);
         }
@@ -188,7 +188,7 @@ script-providers:
                   case '收藏意向铺位':
                     // 收藏意向铺位
                     await storeUp(taskName, shopId, j + 1, totalCount, prizePrice);
-                    $.wait(2000);
+                    await $.wait(2000);
                     // 取消收藏意向铺位
                     await cancelStoreUp(taskName, shopId);
                     break;
@@ -199,9 +199,9 @@ script-providers:
                     await doTask(taskName, shopId, j + 1, totalCount, prizePrice, "SCEN_CONSULT", 'phoneshop');
                     break;
                 }
-                $.wait(2000);
+                await $.wait(2000);
               }
-            $.wait(2000);
+            await $.wait(2000);
           }
         }
       } else {
