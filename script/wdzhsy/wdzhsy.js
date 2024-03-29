@@ -3,7 +3,7 @@
  * 活动规则：完成每日任务，每日可获得 148 万商分
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-03-29 15:35
+ * 更新时间：2024-03-29 15:39
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -203,7 +203,7 @@ script-providers:
           }
         }
       } else {
-        msg += `⛔️ Token已失效\n`;
+        msg += `⛔️ 获取任务列表失败\n`;
         $.log($.toStr(result));
       }
       $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
