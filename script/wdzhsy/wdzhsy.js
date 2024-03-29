@@ -93,13 +93,13 @@ script-providers:
     
           // 获取用户信息, 不打印日志
           await getUserInfo();
-    
+          $.wait(2000);
           // 无效 token 跳出
           if (!$.is_login) continue;  
           
           // 获取任务列表
           await getTask();
-    
+          $.wait(2000);
           // 获取用户信息, 打印日志
           await getUserInfo(true);
         }
@@ -183,23 +183,25 @@ script-providers:
                 const shopId = await getShops();
                 switch (taskName) {
                   case '浏览看铺':
-                    await doTask(taskName, shopId, currentCount, totalCount, prizePrice, "SCEN_SACN", 'scanshop');
+                    await doTask(taskName, shopId, j + 1, totalCount, prizePrice, "SCEN_SACN", 'scanshop');
                     break;
                   case '收藏意向铺位':
                     // 收藏意向铺位
-                    await storeUp(taskName, shopId, currentCount, totalCount, prizePrice);
+                    await storeUp(taskName, shopId, j + 1, totalCount, prizePrice);
                     $.wait(2000);
                     // 取消收藏意向铺位
                     await cancelStoreUp(taskName, shopId);
                     break;
                   case '转发分享':
-                    await doTask(taskName, shopId, currentCount, totalCount, prizePrice, "SCEN_SHARE", 'shareshop');
+                    await doTask(taskName, shopId, j + 1, totalCount, prizePrice, "SCEN_SHARE", 'shareshop');
                     break;
                   case '预约、咨询':
-                    await doTask(taskName, shopId, currentCount, totalCount, prizePrice, "SCEN_CONSULT", 'phoneshop');
+                    await doTask(taskName, shopId, j + 1, totalCount, prizePrice, "SCEN_CONSULT", 'phoneshop');
                     break;
                 }
+                $.wait(2000);
               }
+            $.wait(2000);
           }
         }
       } else {
