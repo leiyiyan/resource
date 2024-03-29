@@ -1,12 +1,12 @@
 /**
  * 脚本名称：万达智慧商业
- * 活动规则：完成每日任务-每日可获得 148 万商分
+ * 活动规则：完成每日任务，每日可获得 148 万商分
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-03-29 14:43
+ * 更新时间：2024-03-29 15:35
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
------------------- Surge 配置 ------------------
 
+------------------ Surge 配置 ------------------
 
 [MITM]
 hostname = %APPEND% www.wandawic.com
@@ -35,7 +35,7 @@ hostname = www.wandawic.com
 ^https?:\/\/www\.wandawic\.com\/api\/foreground\/loginregister\/queryUser url script-response-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js
 
 [task_local]
-30 9 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js, tag=万达智慧商业, img-url=https://raw.githubusercontent.com/FoKit/Scripts/main/images/wechat_pay_coupon.png, enabled=true
+30 9 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js, tag=万达智慧商业, img-url=https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png, enabled=true
 
 ------------------ Stash 配置 ------------------
 
@@ -78,7 +78,7 @@ script-providers:
       }
     
       if ($.userArr.length) {
-        $.log(`✅ 找到 ${$.userArr.length} 个 Token 变量`);
+        $.log(`✅ 找到:${$.userArr.length}个Token变量`);
         for (let i = 0; i < $.userArr.length; i++) {
           $.log(`----- 账号 [${i + 1}] 开始执行 -----`);
           // 初始化
@@ -91,20 +91,21 @@ script-providers:
             'wic-member-token': $.token
           }
     
-          // 获取用户信息
+          // 获取用户信息, 不打印日志
           await getUserInfo();
     
-          if (!$.is_login) continue;  // 无效 token 跳出
+          // 无效 token 跳出
+          if (!$.is_login) continue;  
           
           // 获取任务列表
           await getTask();
     
-          // 获取用户信息
+          // 获取用户信息, 打印日志
           await getUserInfo(true);
         }
         $.log(`----- 所有账号执行完成 -----`);
       } else {
-        throw new Error('未找到 Token 变量 ❌');
+        throw new Error('⛔️ 未找到Token变量');
       }
     }
     
@@ -137,9 +138,9 @@ script-providers:
         const { userId } = result?.data?.userInfo;
         // 把新的 Token 添加到 $.userArr
         token && userId && $.userArr.push({ "userId": userId, "token": token });
-        $.log(`✅ 成功获取 Token`);
+        $.log(`✅ 获取:1个Token变量 `);
       } else {
-        $.log(`❌ 获取 Token 失败: ${$.toStr(result)}`);
+        $.log(`⛔️ 获取Token失败: ${$.toStr(result)}`);
       }
     }
     
@@ -166,16 +167,17 @@ script-providers:
       if (result?.code == '200' && result?.data) {
         let task_list = result?.data?.productList;
         for (let i = 0; i < task_list.length; i++) {
+          // 任务名称、奖励、是否完成、任务进度
           const { taskName, prizePrice, isFinish, taskPeriodTimes } = task_list[i];
+          // 当前任务进度
           const currentCount = JSON.parse(taskPeriodTimes).d.split('/')[0];
+          // 任务总进度
           const totalCount = JSON.parse(taskPeriodTimes).d.split('/')[1];
           switch (isFinish) {
             case 'y':  // 任务已完成
-              msg += `✅ 任务: ${taskName}, 已完成，共计获得 ${prizePrice * totalCount} 万商分\n`;
+              msg += `✅ 任务:${taskName},已完成,共获得${prizePrice * totalCount}万商分\n`;
               break;
-    
             case 'n':  // 任务未完成
-             
               for(let j = 0; j < totalCount - currentCount; j++) {
                 // 随机获取一个商铺 ID
                 const shopId = await getShops();
@@ -184,7 +186,11 @@ script-providers:
                     await doTask(taskName, shopId, currentCount, totalCount, prizePrice, "SCEN_SACN", 'scanshop');
                     break;
                   case '收藏意向铺位':
+                    // 收藏意向铺位
                     await storeUp(taskName, shopId, currentCount, totalCount, prizePrice);
+                    $.wait(2000);
+                    // 取消收藏意向铺位
+                    await cancelStoreUp(taskName, shopId);
                     break;
                   case '转发分享':
                     await doTask(taskName, shopId, currentCount, totalCount, prizePrice, "SCEN_SHARE", 'shareshop');
@@ -197,10 +203,10 @@ script-providers:
           }
         }
       } else {
-        msg += `Token 已失效 ❌\n`;
+        msg += `⛔️ Token已失效\n`;
         $.log($.toStr(result));
       }
-      $.messages.push(msg), $.log(msg);
+      $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
     }
     
     
@@ -227,11 +233,11 @@ script-providers:
       // 发起请求
       var result = await Request(opt);
       if (result?.code == '200') {
-        msg += `✅ 任务: ${taskName}, 完成进度: ${currentCount}/${totalCount}，本次获得${prizePrice} 万商分\n`;
+        msg += `✅ 任务:${taskName},进度: ${currentCount}/${totalCount},获得${prizePrice}万商分\n`;
       } else {
-        $.log(`⛔️ 完成任务${taskName}失败: ${result.message}`);
+        $.log(`⛔️ 完成任务${taskName}失败: ${result?.message}`);
       }
-      $.messages.push(msg), $.log(msg);
+      $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
     }
     // 收藏意向铺位
     async function storeUp(taskName, shopId, currentCount, totalCount, prizePrice) {
@@ -255,11 +261,39 @@ script-providers:
       // 发起请求
       var result = await Request(opt);
       if (result?.code == '200') {
-        msg += `✅ 任务: ${taskName}, 完成进度: ${currentCount}/${totalCount}，本次获得${prizePrice} 万商分\n`;
+        msg += `✅ 任务:${taskName},进度: ${currentCount}/${totalCount},获得${prizePrice}万商分\n`;
       } else {
-        $.log(`⛔️ 完成任务${taskName}失败: ${result.message}`);
+        $.log(`⛔️ 完成任务${taskName}失败: ${result?.message}`);
       }
-      $.messages.push(msg), $.log(msg);
+      $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
+    }
+    // 取消收藏意向铺位
+    async function cancelStoreUp(taskName, shopId) {
+      let msg = '';
+      // 构造请求
+      let opt = {
+        url: `https://www.wandawic.com/api/foreground/store/cancelStoreUp`,
+        headers: $.headers,
+        body: $.toStr({
+          time: getDateTime(),
+          traceId: getUUID(32),
+          channelCode: "ch_xcx",
+          data: {
+            collectType: "2",
+            collectObject: shopId
+          },
+          token: $.token
+        })
+      };
+    
+      // 发起请求
+      var result = await Request(opt);
+      if (result?.code == '200') {
+        msg += `✅ 任务:${taskName},取消店铺收藏\n`;
+      } else {
+        $.log(`⛔️ 完成任务${taskName}失败: ${result?.message}`);
+      }
+      $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
     }
     
     
@@ -280,17 +314,20 @@ script-providers:
       // 发起请求
       var result = await Request(opt);
       if (result?.code == '200' && result?.data) {
-        const { desePhone, balance } = result.data;
+        const { desePhone, balance } = result?.data;
         if(isShowMsg) {
-          msg += `✅「${desePhone}」, 当前商分: ${balance} 万\n`;
+          msg += `✅ 账号:${desePhone},帐户共计:${balance}万商分\n`;
         }
       } else if (result?.code == '401') {
         $.is_login = false;  // Token 失效
-        msg += `${result.message} ❌\n`;
+        msg += `⛔️ ${result?.message} \n`;
+        $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
       } else {
         $.log(`查询用户信息失败 `);
       }
-      $.messages.push(msg), $.log(msg);
+      if(isShowMsg) {
+        $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
+      }
     }
     // 随机获取一个商铺 ID
     async function getShops() {
@@ -305,7 +342,7 @@ script-providers:
           channelCode: "ch_xcx",
           data: {
             current: 1,
-            size: 600,
+            size: 999,
             thisUnitType: "1"
           },
           token: $.token
@@ -315,15 +352,15 @@ script-providers:
       // 发起请求
       var result = await Request(opt);
       if (result?.code == '200' && result?.data) {
-        const { total, records } = result.data;
+        const { total, records } = result?.data;
         const random = Math.floor(Math.random() * total)
         const shopId = records[random].id;
-        msg += `✅ 从 ${total} 个商铺中随机获取一个商铺 ID: ${shopId}\n`;
+        msg += `✅ 从${total}个商铺中随机获取一个商铺ID:${shopId}\n`;
         return shopId;
       } else {
         $.log(`查询商户列表失败 `);
       }
-      $.messages.push(msg), $.log(msg);
+      $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
     }
     
     // 脚本执行入口
@@ -364,10 +401,10 @@ script-providers:
           }
           // 写入数据持久化
           $.setdata($.toStr($.userArr), 'wdzhsy_token');
-          $.messages.push(msg), $.log(msg);
+          $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
         }
       } catch (e) {
-        $.log("❌ 签到数据获取失败"), $.log(e);
+        $.log("⛔️ 签到数据获取失败"), $.log(e);
       }
     }
     
@@ -387,15 +424,15 @@ script-providers:
         $.codeList = [];
         $.codeServer = getEnv("CODESERVER_ADDRESS", "@codeServer.address");
         $.codeFuc = getEnv("CODESERVER_FUN", "@codeServer.fun");
-        if (!$.codeServer) return $.log(`🐛 WeChat code server is not configured.\n`);
+        if (!$.codeServer) return $.log(`⛔️ 提示:未配置微信CodeServer\n`);
     
         $.codeList = ($.codeFuc
           ? (eval($.codeFuc), await WxCode($.appid))
           : (await Request(`${$.codeServer}/?wxappid=${$.appid}`))?.split("|"))
           .filter(item => item.length === 32);
-        $.log(`♻️ 获取到 ${$.codeList.length} 个微信 Code:\n${$.codeList}`);
+        $.log(`✅ 获取:${$.codeList.length}个微信Code`);
       } catch (e) {
-        $.logErr(`❌ 获取微信 Code 失败！`);
+        $.logErr(`⛔️ 获取微信Code失败！`);
       }
     }
     
@@ -412,7 +449,7 @@ script-providers:
         const _respType = options?._respType || 'body';
         const _timeout = options?._timeout || 15e3;
         const _http = [
-          new Promise((_, reject) => setTimeout(() => reject(`❌ 请求超时： ${options['url']}`), _timeout)),
+          new Promise((_, reject) => setTimeout(() => reject(`⛔️ 请求超时: ${options['url']}`), _timeout)),
           new Promise((resolve, reject) => {
             debug(options, '[Request]');
             $[_method.toLowerCase()](options, (error, response, data) => {
