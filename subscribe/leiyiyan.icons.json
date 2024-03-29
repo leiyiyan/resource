@@ -3,6 +3,10 @@
   "description": "脚本图标订阅",
   "icons": [
     {
+      "name": "wdzhsy.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png"
+    },
+    {
       "name": "xmyx.png",
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png"
     },
