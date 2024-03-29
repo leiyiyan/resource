@@ -1,7 +1,7 @@
 /*
 new Env('星妈优选');
 @Author: Leiyiyan
-@Date: 2024-03-28 16:40
+@Date: 2024-03-29 09:30
 
 @Description:
 星妈优选小程序 每日签到、任务
@@ -61,6 +61,7 @@ const taskList = [
   { taskName: "打开签到提醒", taskType: "YXDY", time: 3 },
   { taskName: "大转盘抽奖", taskType: "YXDZP", time: 3 },
   { taskName: "购买任意商品1次", taskType: "YXXD", time: 3 },
+  { taskName: "查看优惠券", taskType: "LLYHJ", time: 3 },
   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 },
   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 } // 执行两次
 ]
@@ -71,7 +72,8 @@ async function main() {
     for (let user of userList) {
       console.log(`🔷账号${user.index} >> Start work`)
       console.log(`随机延迟${user.getRandomTime()}ms`);
-
+      await user.signin();
+      await $.wait(user.getRandomTime());
       if (user.ckStatus) {
         // 完成任务
         for(let task of taskList) {
@@ -137,6 +139,32 @@ class UserInfo {
     }
   }
   
+  // 签到
+  async signin() {
+    try {
+      const { fhNonceStr, fhTimestamp, fhSign } = getSignature();
+      const opts = {
+        url: '/member/signin/getSignInfo',
+        type: "get",
+        params: {
+          signType: 1
+        },
+        headers: Object.assign({}, this.headers, {
+          fhNonceStr,
+          fhTimestamp,
+          fhSign
+        })
+      }
+      const res = await this.fetch(opts);
+      const {signPop} = res?.data;
+      const point = signPop ? signPop?.signPoint : 0;
+      debug(res, `今日签到`)
+      $.log(`✅ ${res?.code == '200' ? point == 0 ? '今日已签到，请勿重复执行' : `签到完成, 获取积分: ${point}分` : res?.msg}\n`);
+    } catch (e) {
+      this.ckStatus = false;
+      $.log(`⛔️ 执行任务今日签到失败! ${e}`);
+    }
+  }
   // 执行任务
   async tofinish(taskName, taskType) {
     try {
@@ -183,7 +211,7 @@ class UserInfo {
       if(res?.code == '200') {
         if(res?.data) {
           const point = res?.data?.awardSendPoints;
-          $.log(`✅ 完成任务: ${taskName}, 获取积分: ${point}分}\n`);
+          $.log(`✅ 完成任务: ${taskName}, 获取积分: ${point}分\n`);
         }else{
           $.log(`✅ 任务: ${taskName} 已完成，请勿重复执行\n`);
         }
@@ -192,7 +220,7 @@ class UserInfo {
       }
     } catch (e) {
       this.ckStatus = false;
-      $.log(`⛔️ 执行任务${taskName}失败! ${e}`);
+      $.log(`⛔️ 完成任务${taskName}失败! ${e}`);
     }
   }
   // 获取用户信息
