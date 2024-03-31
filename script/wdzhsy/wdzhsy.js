@@ -3,7 +3,7 @@
  * 活动规则：完成每日任务，每日可获得 148 万商分
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-03-30 00:18
+ * 更新时间：2024-03-31 09:35
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -170,9 +170,16 @@ script-providers:
           // 任务名称、奖励、是否完成、任务进度
           const { taskName, prizePrice, isFinish, taskPeriodTimes } = task_list[i];
           // 当前任务进度
-          const currentCount = JSON.parse(taskPeriodTimes).d.split('/')[0];
+          let currentCount = 0;
           // 任务总进度
-          const totalCount = JSON.parse(taskPeriodTimes).d.split('/')[1];
+          let totalCount = 0;
+          if(taskName == '收藏意向铺位'){
+            currentCount = JSON.parse(taskPeriodTimes)?.m.split('/')[0];
+            totalCount = JSON.parse(taskPeriodTimes)?.m.split('/')[1];
+          } else {
+            currentCount = JSON.parse(taskPeriodTimes)?.d.split('/')[0];
+            totalCount = JSON.parse(taskPeriodTimes)?.d.split('/')[1];
+          }
           switch (isFinish) {
             case 'y':  // 任务已完成
               msg += `✅ 任务:${taskName},已完成,共获得${prizePrice * totalCount}万商分\n`;
