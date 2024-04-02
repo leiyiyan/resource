@@ -1,7 +1,7 @@
 /*
 new Env('星妈优选');
 @Author: Leiyiyan
-@Date: 2024-03-29 09:30
+@Date: 2024-04-02 14:10
 
 @Description:
 星妈优选小程序 每日签到、任务
@@ -61,9 +61,9 @@ const taskList = [
   { taskName: "打开签到提醒", taskType: "YXDY", time: 3 },
   { taskName: "大转盘抽奖", taskType: "YXDZP", time: 3 },
   { taskName: "购买任意商品1次", taskType: "YXXD", time: 3 },
-  { taskName: "查看优惠券", taskType: "LLYHJ", time: 3 },
-  { taskName: "补签赚积分", taskType: "YXBQ", time: 3 },
-  { taskName: "补签赚积分", taskType: "YXBQ", time: 3 } // 执行两次
+  { taskName: "查看优惠券", taskType: "LLYHJ", time: 3 }
+//   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 },
+//   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 } // 执行两次
 ]
 //---------------------- 脚本入口函数 -----------------------------------
 async function main() {
