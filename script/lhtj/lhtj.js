@@ -1,7 +1,7 @@
 /*
 ------------------------------------------
 @Author: Leiyiyan
-@Date: 2024-03-27 15:25:00
+@Date: 2024-04-08 13:28:00
 @Description: 龙湖天街小程序签到、抽奖
 ------------------------------------------
 获取 Cookie：打开龙湖天街小程序，进入 我的 - 签到赚珑珠 - 任务赚奖励 - 马上签到。
@@ -69,9 +69,13 @@ async function main() {
             // 签到
             const reward_num = await signin(user);
             if ($.ckStatus) {
+                // 抽奖签到
                 await lotterySignin(user)
+                // 抽奖
                 await lotteryClock(user)
+                //查询用户信息
                 const { nick_name, growth_value, level, head_portrait } = await getUserInfo(user)
+                //查询珑珠
                 const { balance } = await getBalance(user)
                 $.avatar = head_portrait;
                 $.title = `本次运行共获得${reward_num}积分`
@@ -113,38 +117,36 @@ async function signin(user) {
         }
         let res = await fetch(opts);
         const reward_num = res?.data?.is_popup == 1 ? res?.data?.reward_info[0]?.reward_num : 0
-        $.log(`${$.doFlag[res?.data?.is_popup == 1]} ${res?.data?.is_popup == 1 ? '签到成功, 获得' + res?.data?.reward_info[0]?.reward_num + '分' : '今日已签到'}\n`);
+        $.log(`${$.doFlag[res?.data?.is_popup == 1]} ${res?.data?.is_popup == 1 ? '每日签到: 成功, 获得' + res?.data?.reward_info[0]?.reward_num + '分' : '每日签到: 今日已签到'}\n`);
         return reward_num
     } catch (e) {
-        $.log(`⛔️ 签到失败！${e}\n`)
+        $.log(`⛔️ 每日签到失败！${e}\n`)
     }
 }
 // 抽奖签到
 async function lotterySignin(user) {
     try {
         const opts = {
-            url: "https://gw2c-hw-open.longfor.com/llt-gateway-prod/api/v1/activity/auth/lottery/sign",
+            url: "https://gw2c-hw-open.longfor.com/lmarketing-task-api-mvc-prod/openapi/task/v1/lottery/sign",
             headers: {
                 'cookie': user.cookie,
                 'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-                'authtoken': user.token,
-                'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
-                'x-gaia-api-key': '2f9e3889-91d9-4684-8ff5-24d881438eaf',
-                'bucode': user['x-lf-bu-code'],
-                'channel': user['x-lf-channel'],
-                'origin': 'https://llt.longfor.com',
-                'referer': 'https://llt.longfor.com/',
-                'x-lf-dxrisk-source': user['x-lf-dxrisk-source']
+                'x-lf-usertoken': user.token,
+                'x-gaia-api-key': 'c06753f1-3e68-437d-b592-b94656ea5517',
+                'x-lf-bu-code': user['x-lf-bu-code'],
+                'x-lf-channel': user['x-lf-channel'],
+                'origin': 'https://longzhu.longfor.com',
+                'referer': 'https://longzhu.longfor.com/'
             },
             type: 'post',
             dataType: "json",
             body: {
-                "component_no": "CV11418B3563OITB",
-                "activity_no": "AP24I022W89IUHFR"
+                "task_id": "",
+                "activity_no": "11111111111711685060624799980000"
             }
         }
         let res = await fetch(opts);
-        $.log(`${$.doFlag[res?.code == '0000']} ${res?.code == '0000' ? '签到成功, 获得' + res?.data?.chance + '次抽奖机会' : res?.message}\n`);
+        $.log(`${$.doFlag[res?.code == '0000']} ${res?.code == '0000' ? '抽奖签到: 成功, 获得' + res?.data?.ticket_times + '次抽奖机会' : '抽奖签到: ' + res?.message}\n`);
     } catch (e) {
         $.log(`⛔️ 抽奖签到失败！${e}\n`)
     }
@@ -153,34 +155,30 @@ async function lotterySignin(user) {
 async function lotteryClock(user) {
     try {
         const opts = {
-            url: "https://gw2c-hw-open.longfor.com/llt-gateway-prod/api/v1/activity/auth/lottery/click",
+            url: "https://gw2c-hw-open.longfor.com/lmarketing-task-api-mvc-prod/openapi/task/v1/lottery/luck",
             headers: {
-                'Cookie': user.cookie,
-                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
-                'authtoken': user.token,
-                'X-LF-DXRisk-Token': user['x-lf-dxrisk-token'],
-                'x-gaia-api-key': '2f9e3889-91d9-4684-8ff5-24d881438eaf',
-                'bucode': user['x-lf-bu-code'],
-                'channel': user['x-lf-channel'],
-                'Origin': 'https://llt.longfor.com',
-                'Referer': 'https://llt.longfor.com/',
-                'X-LF-DXRisk-Source': user['x-lf-dxrisk-source']
+                'cookie': user.cookie,
+                'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x18003029) NetType/4G Language/zh_CN miniProgram/wx50282644351869da',
+                'x-lf-usertoken': user.token,
+                'x-lf-dxrisk-token': user['x-lf-dxrisk-token'],
+                'x-gaia-api-key': 'c06753f1-3e68-437d-b592-b94656ea5517',
+                'x-lf-bu-code': user['x-lf-bu-code'],
+                'x-lf-channel': user['x-lf-channel'],
+                'origin': 'https://longzhu.longfor.com',
+                'referer': 'https://longzhu.longfor.com/',
+                'x-lf-dxrisk-source': user['x-lf-dxrisk-source']
             },
             type: 'post',
             dataType: "json",
             body: {
-                "component_no": "CV11418B3563OITB",
-                "activity_no": "AP24I022W89IUHFR"
+                "task_id": "",
+                "time": getDateTime(),
+                "activity_no": "11111111111711685060624799980000",
+                "use_luck": 0
             }
         }
         let res = await fetch(opts);
-        let reward_num = '';
-        let prize_name = '谢谢参与';
-        if (res?.code == '0000') {
-            reward_num = res?.data?.reward_num || '';
-            prize_name = res?.data?.prize_name || '谢谢参与';
-        }
-        $.log(`${$.doFlag[res?.code == '0000']} ${res?.code == '0000' ? '抽奖成功, 获得' + reward_num + prize_name : res?.message}\n`);
+        $.log(`${$.doFlag[res?.code == '0000']} ${res?.code == '0000' ? '抽奖成功, 获得' + res?.data?.desc : '抽奖: ' + res?.message}\n`);
     } catch (e) {
         $.log(`⛔️ 抽奖失败！${e}\n`)
     }
@@ -284,7 +282,16 @@ async function getCookie() {
     .finally(async () => {
         $.done({ ok: 1 });
     });
-
+function getDateTime() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 /** ---------------------------------固定不动区域----------------------------------------- */
 //prettier-ignore
 async function sendMsg(a) { a && ($.isNode() ? await notify.sendNotify($.name, a) : $.msg($.name, $.title || "", a, { "media-url": $.avatar })) }
