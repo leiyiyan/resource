@@ -155,6 +155,36 @@
       ]
     },
     {
+      "id": "Leiyiyan_Xingma",
+      "name": "星妈优选小程序",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png"
+      ],
+      "keys": [
+        "is_debug",
+        "xmyx_data"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "xmyx_data",
+          "name": "星妈优选小程序Token",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "星妈优选小程序Token"
+        }
+      ]
+    },
+    {
       "id": "Leiyiyan_Longhu",
       "name": "龙湖天街小程序",
       "author": "@leiyiyan",
