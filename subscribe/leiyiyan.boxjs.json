@@ -96,7 +96,7 @@
     },
     {
       "id": "Leiyiyan_Aliyun_Web",
-      "name": "网易云社区",
+      "name": "阿里云社区",
       "author": "@leiyiyan",
       "repo": "",
       "icons": [
@@ -155,40 +155,92 @@
       ]
     },
     {
-      "id": "Sliverkiss_Yrh",
-      "name": "悦然荟小程序",
-      "author": "@Sliverkiss",
+      "id": "Leiyiyan_Longhu",
+      "name": "龙湖天街小程序",
+      "author": "@leiyiyan",
       "repo": "",
       "icons": [
-        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png",
-        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
-      ],
-      "descs_html": [
-        "请自行抓包填写悦然荟小程序的 appid、bid、version",
-        "填写完成后记得点击此页面底端右下角的“保存”。"
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/lhtj.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/lhtj.png"
       ],
       "keys": [
-        "yrh_data"
+        "is_debug",
+        "lhtj_data"
       ],
       "settings": [
         {
-          "id": "@yrh_data.appid",
-          "name": "appid",
-          "val": "",
-          "type": "text",
-          "desc": "填入悦然荟小程序的 appid"
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
         },{
-          "id": "@yrh_data.bid",
-          "name": "bid",
-          "val": "",
-          "type": "text",
-          "desc": "填入悦然荟小程序的 bid"
+          "id": "lhtj_data",
+          "name": "龙湖天街小程序Token",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "龙湖天街小程序Token"
+        }
+      ]
+    },
+    {
+      "id": "Leiyiyan_Wanda",
+      "name": "万达智慧商业小程序",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png"
+      ],
+      "keys": [
+        "is_debug",
+        "wdzhsy_token"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
         },{
-          "id": "@yrh_data.version",
-          "name": "version",
-          "val": "",
-          "type": "text",
-          "desc": "填入悦然荟小程序的 version"
+          "id": "wdzhsy_token",
+          "name": "万达智慧商业小程序Token",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "万达智慧商业小程序Token"
+        }
+      ]
+    },
+    {
+      "id": "Leiyiyan_Ningji",
+      "name": "柠季小程序",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/ningji.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/ningji.png"
+      ],
+      "keys": [
+        "is_debug",
+        "ningji_data"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "ningji_data",
+          "name": "柠季小程序Token",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "柠季小程序Token"
         }
       ]
     }
