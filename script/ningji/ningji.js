@@ -3,7 +3,7 @@
  * 活动规则：每日签到
  * 脚本说明：添加重写进入"柠季"小程序-顶部轮播图-4月签到界面，即可获取 Token，支持多账号，兼容🐉青龙。
  * 环境变量：ningji_data=[{"cardId": "抓包响应体cardId","campaignId":"抓包请求头campaignId","token": "抓包* 抓包请求头x-token"}]
- * 更新时间：2024-04-08 10:25
+ * 更新时间：2024-04-08 12:36
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/ningji.png
 
 ------------------ Surge 配置 ------------------
@@ -119,10 +119,11 @@ async function signin() {
     const { issuedPointAmount, issuedCouponDisplayInfos } = result?.data;
     
     msg += `✅ 签到:获得${issuedPointAmount}积分,${issuedCouponDisplayInfos[0]?.displayData?.name?.value}\n`;
-  } else if (result?.code == 90600) {
-    msg += `✅ 签到:${result.msg}\n`;
+  } else if (result?.code == 90600 || result?.code == 500) {
+    msg += `⛔️ 签到:${result?.msg}\n`;
   } else {
-    throw new Error(`⛔️ 签到失败, ${result.msg}`);
+    msg += `⛔️ 签到信息失败\n`;
+    $.log($.toStr(result));
   }
   $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
 }
@@ -168,9 +169,9 @@ async function getUserInfo(isShowMsg = false) {
   } else if (result?.code == 400) {
     $.is_login = false;  // Token 失效
     msg += `⛔️ ${result?.message} \n`;
-    $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
   } else {
-    $.log(`查询用户信息失败 `);
+    msg += `⛔️ 获取用户信息失败\n`;
+    $.log($.toStr(result));
   }
   if(isShowMsg) {
     $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
