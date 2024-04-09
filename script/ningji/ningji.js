@@ -2,8 +2,8 @@
  * 脚本名称：柠季
  * 活动规则：每日签到
  * 脚本说明：添加重写进入"柠季"小程序-顶部轮播图-4月签到界面，即可获取 Token，支持多账号，兼容🐉青龙。
- * 环境变量：ningji_data=[{"cardId": "抓包响应体cardId","campaignId":"抓包请求头campaignId","token": "抓包* 抓包请求头x-token", "mtgsig": "抓包请求头mtgsig"}]
- * 更新时间：2024-04-09 10:00
+ * 环境变量：ningji_data=[{"cardId": "抓包响应体cardId","campaignId":"抓包请求头campaignId","token": "抓包* 抓包请求头x-token"}]
+ * 更新时间：2024-04-09 10:30
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/ningji.png
 
 ------------------ Surge 配置 ------------------
@@ -62,7 +62,6 @@ async function main() {
       $.token = $.userArr[i]['token'];
       $.cardId = $.userArr[i]['cardId'];
       $.campaignId = $.userArr[i]['campaignId'];
-      $.mtgsig = $.userArr[i]['mtgsig'];
       $.headers = {
         'referer': `https://servicewechat.com/${$.appid}/169/page-frame.html`,
         'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.46(0x18002e2c) NetType/WIFI Language/zh_CN',
@@ -71,8 +70,7 @@ async function main() {
         'orgid': $.orgid,
         'poitype': '1',
         'tenantid': $.tenantid,
-        'poiid': '0',
-        'mtgsig': $.mtgsig
+        'poiid': '0'
       }
 
       // 获取用户信息, 不打印日志
@@ -124,7 +122,8 @@ async function signin() {
   } else if (result?.code == 90600 || result?.code == 500) {
     msg += `⛔️ 签到:${result?.msg}\n`;
   } else {
-    msg += `⛔️ 签到信息失败: ${result?.msg}\n`;
+    msg += `⛔️ 签到信息失败\n`;
+    $.log($.toStr(result));
   }
   $.messages.push(msg.trimEnd()), $.log(msg.trimEnd());
 }
@@ -204,7 +203,6 @@ function GetCookie() {
     const header = ObjectKeys2LowerCase($request.headers);
     const token = header['x-token'];
     const campaignId = header['campaignid'];
-    const mtgsig = header['mtgsig'];
     const body = $.toObj($response.body);
     const { cardId } = body?.data?.userInfo?.cardInfo;
     if (token && cardId) {
@@ -213,10 +211,9 @@ function GetCookie() {
         msg += `更新用户 [${cardId}] Token: ${token}\n`;
         user.token = token;
         user.campaignId = campaignId;
-        user.mtgsig = mtgsig;
       } else {
         msg += `新增用户 [${cardId}] Token: ${token}\n`;
-        $.userArr.push({ "cardId": cardId, "campaignId": campaignId, "token": token, "mtgsig": mtgsig });
+        $.userArr.push({ "cardId": cardId, "campaignId": campaignId, "token": token });
       }
       // 写入数据持久化
       $.setdata($.toStr($.userArr), 'ningji_data');
