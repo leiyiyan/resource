@@ -1,0 +1,18 @@
+#!name = 星妈优选
+#!desc = 星妈优选小程序 每日签到、任务。
+#!author = leiyiyan
+#!homepage = https://github.com/leiyiyan/resource
+#!icon = https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png
+#!date = 2024-04-10 16:44:00
+
+
+
+[Script]
+# 定时任务
+cron "1 12 * * *" script-path=xmyx.js, timeout=600, tag=星妈优选, img-url=https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png
+
+# 获取Token
+http-response ^https?:\/\/www\.feihevip\.com\/api\/starMember\/getMemberInfo script-path=xmyx.js, requires-body=true, timeout=10, tag=星妈优选Token, img-url=https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png
+  
+[MitM]
+hostname = www.feihevip.com
