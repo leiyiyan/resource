@@ -125,6 +125,72 @@
       ]
     },
     {
+      "id": "Leiyiyan_Aliyun_Web_CK",
+      "name": "阿里云社区同步青龙",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/aliyun_web.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/aliyun_web.png"
+      ],
+      "keys": [
+        "aliyunWeb_QL"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },
+        {
+          "id": "@aliyunWeb_QL.host",
+          "name": "青龙服务器地址",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入服务器地址，不包括/，如http://127.0.0.1:5700"
+        },{
+          "id": "@aliyunWeb_QL.clientId",
+          "name": "clientId",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入青龙应用的clientId"
+        },
+        {
+          "id": "@aliyunWeb_QL.secret",
+          "name": "secret",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入青龙应用的secret"
+        },
+        {
+          "id": "@aliyunWeb_QL.envName",
+          "name": "变量名称",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入要同步到青龙的变量名称，默认：aliyunWeb_data"
+        },
+        {
+          "id": "@aliyunWeb_QL.taskName",
+          "name": "任务名称",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入要运行的青龙的任务名称，默认：阿里云社区"
+        }
+      ]
+    },
+    {
       "id": "Leiyiyan_Cfmoto",
       "name": "春风摩托",
       "author": "@leiyiyan",
