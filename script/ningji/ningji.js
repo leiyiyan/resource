@@ -118,7 +118,7 @@ async function signin() {
   if (result?.code == 0 && result?.issuedCouponDisplayInfos && result?.issuedPointAmount) {
     const { issuedPointAmount, issuedCouponDisplayInfos } = result;
     
-    msg += `✅ 签到:获得${issuedPointAmount}积分,${issuedCouponDisplayInfos[0]?.displayData?.name?.value}\n`;
+    msg += `✅ 签到:获得${issuedPointAmount}积分 ${issuedCouponDisplayInfos[0]?.displayData?.name?.value || ''}\n`;
   } else if (result?.code == 90600 || result?.code == 500) {
     msg += `⛔️ 签到:${result?.msg}\n`;
   } else {
