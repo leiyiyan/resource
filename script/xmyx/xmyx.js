@@ -1,7 +1,7 @@
 /*
 new Env('星妈优选');
 @Author: Leiyiyan
-@Date: 2024-04-10 16:48
+@Date: 2024-04-16 10:05
 
 @Description:
 星妈优选小程序 每日签到、任务
@@ -46,10 +46,6 @@ $.is_debug = ($.isNode() ? process.env.IS_DEDUG : $.getdata('is_debug')) || 'fal
 $.notifyList = [];
 // 为通知准备的空数组
 $.notifyMsg = [];
-//------------------------ code server -------------------------------------
-$.codeServer = ($.isNode() ? process.env["codeServer_address"] : $.getdata("@codeServer.address")) || '';
-$.codeOpen = ($.isNode() ? process.env["codeServer_open"] : $.getdata("@codeServer.open")) || 'false';
-$.wxCode = $.codeOpen != "false" && $.codeServer && $.appid;
 
 //---------------------- 自定义变量区域 -----------------------------------
 const appid = 'xmyx'
@@ -353,20 +349,34 @@ async function refreshToken(data) {
   }
 }
 //检查code服务器
-async function checkCodeServer() {
-  try {
-    $.codeFuc = ($.isNode() ? process.env["codeServer_fun"] : $.getdata("@codeServer.fun")) || '';
-
-    let codeList = $.codeFuc
-      ? (eval($.codeFuc), await WxCode($.appid))
-      : (await Request({ url: `${$.codeServer}/?wxappid=${$.appid}` }))?.split("|") || [];
-
-    codeList = codeList.filter(e => e.toString().length === 32);
+async function checkCodeServer(appid) {
+  // 环境变量
+  $.codeServer = $.isNode() ? process.env["CODESERVER_ADDRESS"] : $.getdata('@codeServer.address');
+  // 需要获取的微信列表，用,分隔
+  $.wxId = ($.isNode() ? process.env["CODESERVER_WXID"] : $.getdata('@codeServer.wxId')).split(",");
+  // 获取codeList
+  let codeList = await Promise.all($.wxId.map(e => getCode(e)));
+  async function getCode(wxId) {
+    try {
+      const options = {
+        url: `${$.codeServer}/api/Common/JSLogin`,
+        headers: { "accept": "application/json", "content-type": "application/json" },
+        body: JSON.stringify({
+          'wxId': wxId,
+          'appId': appid
+        })
+      };
+      let res = await $.http.post(options);
+      res = $.toObj(res?.body);
+      return res?.Data?.code;
+    } catch (e) {
+      $.log(e);
+    }
+  }
     debug(codeList);
     !codeList.length
       ? $.log(`❌获取code授权失败！请检查服务器运行是否正常 => 尝试读取数据持久化 `)
       : $.log(`✅获取code授权成功！当前code数量为${codeList.length}`);
-
     let userList = await Promise.all(codeList.map(async (code) => {
       const token = await getWxToken(code);
       const newToken = await refreshToken(token);
@@ -375,21 +385,11 @@ async function checkCodeServer() {
     }));
     userList = userList.filter(value => Object.keys(value).length !== 0)
     return userList;
-  } catch (e) {
-    $.log(`❌checkCodeServer run error => ${e}`)
-  }
 }
 //检查环境变量
 async function checkEnv() {
   try {
-    let usersToAdd = [];
-
-    if ($.wxCode) {
-      usersToAdd = await checkCodeServer() || [];
-    } else if (!userCookie || !userCookie.length) {
-      console.log("未找到CK");
-      return;
-    }
+    let usersToAdd = await checkCodeServer($.appid) || [];
 
     if (!usersToAdd.length) {
       const e = envSplitor.find(o => userCookie.includes(o)) || envSplitor[0];
