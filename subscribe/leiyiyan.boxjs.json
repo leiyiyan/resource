@@ -7,9 +7,12 @@
   "apps": [
     {
       "id": "Code Server",
-      "name": "萝卜 Code",
-      "author": "@Luobook",
+      "name": "Code Server",
+      "author": "仅作学习交流",
       "repo": "",
+      "descs_html": [
+        "<p style='margin-left:20px;'>本接口及源码仅限学习研究，严禁将接口使用于电信诈骗、网络赌博、恶意营销、非法传销 等违法活动，引起任何法律责任概不负责。</p>"
+      ],
       "icons": [
         "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png",
         "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png"
@@ -30,6 +33,14 @@
           "val": "",
           "type": "text",
           "desc": "填入服务器地址，如http://127.0.0.1:99"
+        },{
+          "id": "@codeServer.wxId",
+          "name": "微信wxId",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "微信wxId,多账号用,分隔，非必需参数，仅当服务器有需求时填入"
         }
       ]
     },
