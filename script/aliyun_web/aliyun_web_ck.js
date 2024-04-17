@@ -1,6 +1,6 @@
 /*
 作者：@leiyiyan 致谢@Sliverkiss、@yuheng
-更新日期：2024.04.10 09:37:17
+更新日期：2024.04.17 14:30:00
 
 阿里云社区自动获取ck并同步到青龙后自动执行脚本，用于解决阿里云社区 Cookie 有效期过短，需要频繁抓取的问题
 脚本兼容：Surge、QuantumultX、Loon、Shadowrocket
@@ -95,11 +95,17 @@ async function main(user) {
         console.log(`🎉${QL.envName}数据同步青龙成功!`);
         // 运行任务
         
-        const taskId = await ql.getTask();
-        
-        await ql.runTask([taskId])
-        $.title = `🎉${QL.taskName}开始执行任务!`;
-        DoubleLog(`${QL.taskName}\n开始执行任务!`);
+        const task = await ql.getTask();
+        if(task) {
+            if(task.status == 1) {
+                await ql.runTask([task.id])
+                $.title = `🎉${QL.taskName}开始执行任务!`;
+                DoubleLog(`${QL.taskName}\n开始执行任务!`);
+            }else{
+                $.title = `🎉${QL.taskName}任务已被执行!`;
+                DoubleLog(`${QL.taskName}\n任务已被执行!`);
+            }
+        }
     } catch (e) {
         console.log("操作青龙出错:" + e);
         throw new Error("操作青龙出错:" + e);
@@ -288,7 +294,10 @@ function QingLong(HOST, Client_ID, Client_Secret) {
                     const tasks = data?.data;
                     const task = tasks.find((item) => item.name == QL.taskName);
                     $.log(`✅ 获取taskId成功.`);
-                    return task.id;
+                    return {
+                        id: task.id,
+                        status: task.status
+                    };
                 } else {
                     throw message || `无法获取taskId.`;
                 }
