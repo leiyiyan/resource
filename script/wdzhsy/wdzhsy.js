@@ -1,9 +1,9 @@
 /**
  * 脚本名称：万达智慧商业
- * 活动规则：完成每日任务，每日可获得 148 万商分
+ * 活动规则：完成每日任务
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-03-31 10:38
+ * 更新时间：2024-04-17 10:52
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -183,7 +183,7 @@ script-providers:
           }
           switch (isFinish) {
             case 'y':  // 任务已完成
-              msg += `✅ 任务:${taskName},已完成,共获得${prizePrice * totalCount}万商分\n`;
+              msg += `✅ 任务:${taskName},已完成\n`;
               break;
             case 'n':  // 任务未完成
               for(let j = 0; j < totalCount - currentCount; j++) {
