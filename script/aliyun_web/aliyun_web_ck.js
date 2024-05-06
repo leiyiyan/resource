@@ -98,7 +98,7 @@ async function main(user) {
         const task = await ql.getTask();
         if(task) {
             if(task.status == 1) {
-                if(QL.autoRunTask) {
+                if(QL.autoRunTask == 'true' || QL.autoRunTask == true) {
                     await ql.runTask([task.id])
                     $.title = `🎉${QL.taskName}开始执行任务!`;
                     DoubleLog(`${QL.taskName}\n开始执行任务!`);
