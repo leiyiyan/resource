@@ -98,9 +98,14 @@ async function main(user) {
         const task = await ql.getTask();
         if(task) {
             if(task.status == 1) {
-                await ql.runTask([task.id])
-                $.title = `🎉${QL.taskName}开始执行任务!`;
-                DoubleLog(`${QL.taskName}\n开始执行任务!`);
+                if(QL.autoRunTask) {
+                    await ql.runTask([task.id])
+                    $.title = `🎉${QL.taskName}开始执行任务!`;
+                    DoubleLog(`${QL.taskName}\n开始执行任务!`);
+                }else{
+                    $.title = `🎉${QL.envName}数据同步青龙成功!`;
+                    DoubleLog(`${QL.envName}\n数据同步青龙成功!`);
+                }
             }else{
                 $.title = `🎉${QL.taskName}任务已被执行!`;
                 DoubleLog(`${QL.taskName}\n任务已被执行!`);

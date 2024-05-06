@@ -207,6 +207,13 @@
           "autoGrow": true,
           "rows": 1,
           "desc": "填入要运行的青龙的任务名称，默认：阿里云社区"
+        },
+        {
+          "id": "@aliyunWeb_QL.autoRunTask",
+          "name": "开启自动运行任务",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
         }
       ]
     },
