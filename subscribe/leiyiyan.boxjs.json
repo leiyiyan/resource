@@ -125,13 +125,21 @@
           "val": false,
           "type": "boolean",
           "desc": "默认关闭"
-        },{
+        },
+        {
           "id": "aliyunWeb_data",
           "name": "阿里云社区Cookie数据",
           "val": null,
           "type": "textarea",
           "autoGrow": true,
           "desc": "阿里云社区Cookie数据"
+        },
+        {
+          "id": "aliyunWeb_time",
+          "name": "阿里云社区控制时间",
+          "val": "12",
+          "type": "input",
+          "desc": "早于该时间则执行任务，晚于该时间则领取积分，默认: 12(即中午12点，为避免出现乱七八糟的问题，请设置: 1-23的整数)"
         }
       ]
     },
