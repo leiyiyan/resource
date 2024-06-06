@@ -3,7 +3,7 @@
  * 活动规则：完成每日任务
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-04-17 10:52
+ * 更新时间：2024-06-06 11:05
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -352,7 +352,7 @@ script-providers:
           channelCode: "ch_xcx",
           data: {
             current: 1,
-            size: 999,
+            size: 2500,
             thisUnitType: "1"
           },
           token: $.token
@@ -363,7 +363,7 @@ script-providers:
       var result = await Request(opt);
       if (result?.code == '200' && result?.data) {
         const { total, records } = result?.data;
-        const random = Math.floor(Math.random() * total)
+        const random = Math.floor(Math.random() * 2500)
         const shopId = records[random].id;
         msg += `✅ 从${total}个商铺中随机获取一个商铺ID:${shopId}\n`;
         return shopId;
