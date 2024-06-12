@@ -1,7 +1,7 @@
 /*
 new Env('春风摩托');
 @Author: Leiyiyan
-@Date: 2024-05-19 21:28
+@Date: 2024-06-12 09:55
 
 @Description:
 春风摩托 每日签到、会员任务，积分可兑换实物
@@ -76,6 +76,10 @@ async function main() {
           await user.lottery()
           await $.wait(user.getRandomTime());
         }
+        // 限时抽奖
+        await user.getLotteryList()
+        await $.wait(user.getRandomTime());
+
         for(let i = 0; i < 3; i++) {
           // 创建帖子
           const postId = await user.createArticle()
@@ -175,8 +179,10 @@ class UserInfo {
         $.log(`✅ 签到任务: 已完成`);
         const point = parseInt(res.data)
         return point
+      } else {
+        $.log(`✅ 签到任务: 今日已签到`);
+        return null
       }
-      return null
     } catch (e) {
       this.ckStatus = false;
       $.log(`⛔️ 签到失败! ${e}`);
@@ -368,6 +374,7 @@ class UserInfo {
       if (res.code == 0) {
         const count = res?.data?.count
         const prize = res?.data?.prize
+        $.log(prize ? `✅ 满足盲盒抽奖条件` : `✅ 未满足盲盒抽奖条件`)
         return {count, prize}
       }
       return null
@@ -376,8 +383,95 @@ class UserInfo {
       $.log(`⛔️ 查询签到记录失败! ${e}`);
     }
   }
-
-
+  // 获取限时抽奖活动列表
+  async getLotteryList() {
+    try {
+      const opts = {
+        url: `/jv/bbs/lottery/listgoing/`,
+        type: "get",
+        params: {},
+        dataType: "json"
+      }
+      let res = await this.fetch(opts);
+      if (res.code == 0) {
+        const list = res?.data?.list
+        if(list && list.length) {
+          for(let item of list) {
+            if(item.lottery_status_name === "进行中") {
+              $.log(`✅ 开始参与限时抽奖活动`)
+              await this.getLotteryDetail(item.id)
+            }
+          }
+          if(list[list.length - 1].lottery_status_name !== '进行中') {
+            $.log(`✅ 当前无限时抽奖活动`)
+          }
+        } else {
+          $.log(`✅ 当前无限时抽奖活动`)
+        }
+      }
+    } catch (e) {
+      this.ckStatus = false;
+      $.log(`⛔️ 查询限时抽奖活动列表失败! ${e}`);
+    }
+  }
+  // 获取限时抽奖活动详情
+  async getLotteryDetail(id) {
+    try {
+      const opts = {
+        url: `/jv/bbs/lottery/${id}/detail/`,
+        type: "get",
+        params: {},
+        dataType: "json"
+      }
+      let res = await this.fetch(opts);
+      if (res.code == 0) {
+        const tickitList = res?.data?.lottery_user_ticket_list
+        if(!tickitList.length) {
+          await this.lotteryApply(id)
+        }
+        await this.lotteryShare(id)
+      }
+    } catch (e) {
+      this.ckStatus = false;
+      $.log(`⛔️ 查询限时抽奖活动详情失败! ${e}`);
+    }
+  }
+  // 报名限时抽奖活动
+  async lotteryApply(id) {
+    try {
+      const opts = {
+        url: `/jv/bbs/lottery/${id}/apply/`,
+        type: "get",
+        params: {},
+        dataType: "json"
+      }
+      let res = await this.fetch(opts);
+      if (res.code == 0) {
+        $.log(`✅ 报名限时抽奖活动成功!`)
+      }
+    } catch (e) {
+      this.ckStatus = false;
+      $.log(`⛔️ 报名限时抽奖活动失败! ${e}`);
+    }
+  }
+  // 报名限时抽奖活动
+  async lotteryShare(id) {
+    try {
+      const opts = {
+        url: `/jv/bbs/lottery/${id}/share/`,
+        type: "get",
+        params: {},
+        dataType: "json"
+      }
+      let res = await this.fetch(opts);
+      if (res.code == 0) {
+        $.log(`✅ 分享限时抽奖活动成功!`)
+      }
+    } catch (e) {
+      this.ckStatus = false;
+      $.log(`⛔️ 分享限时抽奖活动失败! ${e}`);
+    }
+  }
 }
 async function getCookie() {
   if ($request && $request.method === 'OPTIONS') return;
