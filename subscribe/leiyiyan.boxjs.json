@@ -141,6 +141,20 @@
           "val": "12",
           "type": "input",
           "desc": "早于该时间则执行任务，晚于该时间则领取积分，默认: 12(即中午12点，为避免出现乱七八糟的问题，请设置: 1-23的整数)"
+        },
+        {
+          "id": "aliyunWeb_scene",
+          "name": "阿里云社区控制场景任务开启",
+          "val": false,
+          "type": "boolean",
+          "desc": "控制是否开启场景任务，默认：关闭(false)"
+        },
+        {
+          "id": "aliyunWeb_stock",
+          "name": "阿里云社区控制库存查询开启",
+          "val": false,
+          "type": "boolean",
+          "desc": "控制是否开启库存查询，默认：关闭(false)"
         }
       ]
     },
