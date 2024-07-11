@@ -144,14 +144,14 @@
         },
         {
           "id": "aliyunWeb_scene",
-          "name": "阿里云社区控制场景任务开启",
+          "name": "开启场景任务",
           "val": false,
           "type": "boolean",
           "desc": "控制是否开启场景任务，默认：关闭(false)"
         },
         {
           "id": "aliyunWeb_stock",
-          "name": "阿里云社区控制库存查询开启",
+          "name": "开启库存查询",
           "val": false,
           "type": "boolean",
           "desc": "控制是否开启库存查询，默认：关闭(false)"
