@@ -426,7 +426,7 @@ class UserInfo {
       let res = await this.fetch(opts);
       if (res.code == 0) {
         const tickitList = res?.data?.lottery_user_ticket_list
-        if(!tickitList.length) {
+        if(!tickitList) {
           await this.lotteryApply(id)
         }
         await this.lotteryShare(id)
