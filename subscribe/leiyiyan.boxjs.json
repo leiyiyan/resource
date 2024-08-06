@@ -241,11 +241,11 @@
         "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cbd.png"
       ],
       "keys": [
-        "cbd_ql"
+        "CBD_QL"
       ],
       "settings": [
         {
-          "id": "@cbd_ql.host",
+          "id": "@CBD_QL.host",
           "name": "青龙服务器地址",
           "val": "",
           "type": "textarea",
@@ -253,7 +253,7 @@
           "rows": 1,
           "desc": "填入服务器地址，不包括/，如http://127.0.0.1:5700"
         },{
-          "id": "@cbd_ql.clientId",
+          "id": "@CBD_QL.clientId",
           "name": "clientId",
           "val": "",
           "type": "textarea",
@@ -262,7 +262,7 @@
           "desc": "填入青龙应用的clientId"
         },
         {
-          "id": "@cbd_ql.secret",
+          "id": "@CBD_QL.secret",
           "name": "secret",
           "val": "",
           "type": "textarea",
@@ -271,7 +271,7 @@
           "desc": "填入青龙应用的secret"
         },
         {
-          "id": "@cbd_ql.envName",
+          "id": "@CBD_QL.envName",
           "name": "变量名称",
           "val": "",
           "type": "textarea",
