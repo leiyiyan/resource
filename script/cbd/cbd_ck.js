@@ -67,19 +67,22 @@ async function main(user) {
         const envs = ql.selectEnvByName(QL.envName);
         if(!envs.length) throw new Error(`⛔️ 请在青龙应用配置环境变量：${QL.envName}`);
         const selectedEnv = envs[0]
-
+        console.log(QL.envName);
+        console.log(envs);
+        
         debug(selectedEnv);
 
         if (selectedEnv) {
             const envValues = JSON.parse(selectedEnv.value);
             console.log(envValues)
-            const index = envValues.findIndex(e => e.csession == user.csession)
+            let index = envValues.findIndex(e => e.csession == user.csession)
+            index = index === -1 ? 0 : index
+            console.log('index: ' + index)
             if (envValues[index].csession == user.csession) {
                 $.title = `${QL.envName}当前ck未过期，无需同步`;
                 DoubleLog(`⛔️ ${QL.envName}当前ck未过期，无需同步`);
                 return;
             }
-            envValues[index] = user;
             // 更新已存在的环境变量
             await ql.updateEnv({ value: JSON.stringify(envValues), name: QL.envName, id: selectedEnv.id });
         } else {
@@ -87,6 +90,8 @@ async function main(user) {
             await ql.addEnv([{ value: JSON.stringify(user), name: QL.envName }])
         }
         console.log(`🎉${QL.envName}数据同步青龙成功!`);
+        $.title = `🎉${QL.envName}数据同步青龙成功!`;
+        DoubleLog(`${QL.envName}\n数据同步青龙成功!`);
     } catch (e) {
         console.log("操作青龙出错:" + e);
         throw new Error("操作青龙出错:" + e);
