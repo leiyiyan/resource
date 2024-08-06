@@ -232,6 +232,56 @@
       ]
     },
     {
+      "id": "Leiyiyan_CBD_CK",
+      "name": "茶百道同步青龙",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cbd.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cbd.png"
+      ],
+      "keys": [
+        "CBD_QL"
+      ],
+      "settings": [
+        {
+          "id": "@cbd_ql.host",
+          "name": "青龙服务器地址",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入服务器地址，不包括/，如http://127.0.0.1:5700"
+        },{
+          "id": "@cbd_ql.clientId",
+          "name": "clientId",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入青龙应用的clientId"
+        },
+        {
+          "id": "@cbd_ql.secret",
+          "name": "secret",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入青龙应用的secret"
+        },
+        {
+          "id": "@cbd_ql.envName",
+          "name": "变量名称",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入要同步到青龙的变量名称"
+        }
+      ]
+    },
+    {
       "id": "Leiyiyan_Cfmoto",
       "name": "春风摩托",
       "author": "@leiyiyan",
