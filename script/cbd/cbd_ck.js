@@ -44,6 +44,7 @@ async function getCookie() {
     
     if (!csession) throw new Error(`⛔️ ${QL.envName}获取cookie失败!`);
     const user = {
+        username: QL.username,
         csession,
         versionname,
         versioncode,
@@ -75,14 +76,10 @@ async function main(user) {
         if (selectedEnv) {
             const envValues = JSON.parse(selectedEnv.value);
             console.log(envValues)
-            let index = envValues.findIndex(e => e.csession == user.csession)
+            let index = envValues.findIndex(e => e.username == user.username)
             index = index === -1 ? 0 : index
             console.log('index: ' + index)
-            if (envValues[index].csession == user.csession) {
-                $.title = `${QL.envName}当前ck未过期，无需同步`;
-                DoubleLog(`⛔️ ${QL.envName}当前ck未过期，无需同步`);
-                return;
-            }
+            envValues[index] = user;
             // 更新已存在的环境变量
             await ql.updateEnv({ value: JSON.stringify(envValues), name: QL.envName, id: selectedEnv.id });
         } else {

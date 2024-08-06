@@ -278,6 +278,15 @@
           "autoGrow": true,
           "rows": 1,
           "desc": "填入要同步到青龙的变量名称"
+        },
+        {
+          "id": "@CBD_QL.username",
+          "name": "用户名",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "rows": 1,
+          "desc": "填入要同步到青龙的用户名(自定义)"
         }
       ]
     },
