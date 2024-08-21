@@ -12,10 +12,10 @@ new Env('极核-ZEEHO');
 
 [Script]
 # 获取 Cookie
-http-response ^https:\/\/tapi\.zeehoev\.com\/v1\.0\/mine\/cfmotoservermine\/setting script-path=https://github.com/leiyiyan/resource/blob/main/script/zeeho/zeeho.js, requires-body=true, timeout=60, tag=极核Cookie
+http-response ^https:\/\/tapi\.zeehoev\.com\/v1\.0\/mine\/cfmotoservermine\/setting script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/zeeho/zeeho.js, requires-body=true, timeout=60, tag=极核Cookie
 
 # 脚本任务
-cron "0 7 * * *" script-path=https://github.com/leiyiyan/resource/blob/main/script/zeeho/zeeho.js, tag=极核
+cron "0 7 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/zeeho/zeeho.js, tag=极核
 
 [MITM]
 hostname = tapi.zeehoev.com
