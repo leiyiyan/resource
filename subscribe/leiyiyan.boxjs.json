@@ -321,6 +321,36 @@
       ]
     },
     {
+      "id": "Leiyiyan_Zeeho",
+      "name": "极核-ZEEHO",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zeeho.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zeeho.png"
+      ],
+      "keys": [
+        "is_debug",
+        "zeeho_data"
+      ],
+      "settings": [
+        {
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "zeeho_data",
+          "name": "极核Cookie数据",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "极核Cookie数据"
+        }
+      ]
+    },
+    {
       "id": "Leiyiyan_Xingma",
       "name": "星妈优选小程序",
       "author": "@leiyiyan",
