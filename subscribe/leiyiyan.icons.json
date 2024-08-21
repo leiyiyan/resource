@@ -3,36 +3,28 @@
   "description": "脚本图标订阅",
   "icons": [
     {
-      "name": "wx.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wx.png"
-    },
-    {
-      "name": "picc.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/picc.png"
-    },
-    {
       "name": "zmhy.png",
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zmhy.png"
-    },
-    {
-      "name": "pyy.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png"
-    },
-    {
-      "name": "cfmoto.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cfmoto.png"
     },
     {
       "name": "aliyun_web.png",
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/aliyun_web.png"
     },
     {
+      "name": "wx.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wx.png"
+    },
+    {
+      "name": "yrh.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
+    },
+    {
       "name": "xmyx.png",
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/xmyx.png"
     },
     {
-      "name": "netease_music.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png"
+      "name": "picc.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/picc.png"
     },
     {
       "name": "cbd.png",
@@ -43,16 +35,28 @@
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/ningji.png"
     },
     {
-      "name": "lhtj.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/lhtj.png"
-    },
-    {
-      "name": "yrh.png",
-      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/yrh.png"
+      "name": "zeeho.png.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zeeho.png.png"
     },
     {
       "name": "wdzhsy.png",
       "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png"
+    },
+    {
+      "name": "lhtj.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/lhtj.png"
+    },
+    {
+      "name": "pyy.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/pyy.png"
+    },
+    {
+      "name": "cfmoto.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/cfmoto.png"
+    },
+    {
+      "name": "netease_music.png",
+      "url": "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/netease_music.png"
     }
   ]
 }
