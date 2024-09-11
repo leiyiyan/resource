@@ -155,6 +155,13 @@
           "val": false,
           "type": "boolean",
           "desc": "控制是否开启库存查询，默认：关闭(false)"
+        },
+        {
+          "id": "aliyunWeb_video",
+          "name": "开启视频任务",
+          "val": false,
+          "type": "boolean",
+          "desc": "控制是否开启视频任务，默认：关闭(false)"
         }
       ]
     },
