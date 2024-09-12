@@ -40,7 +40,7 @@ let QL = ($.isNode() ? process.env.aliyunWeb_QL : $.getjson("aliyunWeb_QL")) || 
 //---------------------- 自定义函数区 -----------------------------------
 async function getCookie() {
     if (typeof $request === "undefined" || $request.method === 'OPTIONS') return;
-
+    const url = $request.url
     const headers = ObjectKeys2LowerCase($request.headers);
     const cookie = headers.cookie;
     debug(cookie, "获取到的cookie如下");
@@ -48,7 +48,14 @@ async function getCookie() {
     if (!cookie) throw new Error(`⛔️ ${QL.envName}获取cookie失败!`);
     const body = $.toObj($response.body);
     if (!(body?.data)) throw new Error(`⛔️ 获取Body失败!`);
-    const { nickname, avatar } = body?.data;
+    let nickname = '';
+    let avatar = '';
+    if(url.indexOf('getUser') > -1) {
+        nickname = body?.data?.nickname;
+        avatar = body?.data?.avatar
+    } else if (url.indexOf('queryUserBaseInfo')) {
+        nickname = body?.data?.userNick;
+    }
     const user = {
         "userId": nickname,
         "avatar": avatar,
