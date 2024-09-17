@@ -476,6 +476,29 @@
           "desc": "柠季小程序Token"
         }
       ]
+    },
+    {
+      "id": "Leiyiyan_iios",
+      "name": "iios-苹果软件站",
+      "author": "@leiyiyan",
+      "repo": "",
+      "icons": [
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/iios.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/iios.png"
+      ],
+      "keys": [
+        "iios_data"
+      ],
+      "settings": [
+        {
+          "id": "iios_data",
+          "name": "账号信息",
+          "val": null,
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "账号信息"
+        }
+      ]
     }
   ]
 }
