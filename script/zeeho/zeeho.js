@@ -1,7 +1,7 @@
 /*
 new Env('极核-ZEEHO');
 @Author: Leiyiyan
-@Date: 2024-08-21 13:50
+@Date: 2024-09-18 09:15
 
 @Description:
 极核 每日签到、积分任务
@@ -9,6 +9,9 @@ new Env('极核-ZEEHO');
 获取 Cookie 方式：zeeho app - 我的
 
 图标: https://raw.githubusercontent.com/leiyiyan/resource/main/icons/zeeho.png
+
+Boxjs订阅: https://raw.githubusercontent.com/leiyiyan/resource/main/subscribe/leiyiyan.boxjs.json
+
 
 [Script]
 # 获取 Cookie
@@ -67,7 +70,7 @@ async function main() {
         // 查看签到记录
         const {count, prize} = await user.getSignRecord()
         await $.wait(user.getRandomTime());
-        if(prize == 1) {
+        if(prize == 3) {
           // 盲盒抽奖
           integralScore = await user.lottery()
           await $.wait(user.getRandomTime());
@@ -190,7 +193,7 @@ class UserInfo {
       if (res?.code == '10000' && res?.message == '操作成功') {
         const count = res?.data?.signCount
         const prize = res?.data?.prizes
-        $.log(prize == 2 ? `✅ 未满足盲盒抽奖条件` : `✅ 满足盲盒抽奖条件`)
+        $.log(prize == 3 ? `✅ 满足盲盒抽奖条件` : `✅ 未满足盲盒抽奖条件`)
         return {count, prize}
       }
       return null
@@ -203,6 +206,7 @@ class UserInfo {
   async lottery() {
     try {
       const params = {
+        boxType: 0,
         server_name: 'SMART'
       }
       const opts = {
@@ -215,7 +219,8 @@ class UserInfo {
       let res = await this.fetch(opts);
       if (res?.code == '10000') {
         const integralScore = res?.data?.integralScore
-        $.log(`✅ 盲盒抽奖获得: ${integralScore}`);
+        const prizesName = res?.data?.prizesName
+        $.log(`✅ 盲盒抽奖获得: ${prizesName}`);
         return integralScore
       }else{
         $.log(`⛔️ 盲盒抽奖失败! ${res?.message}`);
