@@ -1,7 +1,7 @@
 /*
 new Env('星妈优选');
 @Author: Leiyiyan
-@Date: 2024-04-16 10:05
+@Date: 2024-10-08 15:05
 
 @Description:
 星妈优选小程序 每日签到、任务
@@ -36,7 +36,8 @@ $.appid = "wx4205ec55b793245e";
 const Notify = 1;//0为关闭通知,1为打开通知,默认为1
 const notify = $.isNode() ? require('./sendNotify') : '';
 let envSplitor = ["@"]; //多账号分隔符
-var userCookie = ($.isNode() ? process.env[ckName] : $.getdata(ckName)) || '';
+// var userCookie = ($.isNode() ? process.env[ckName] : $.getdata(ckName)) || '';
+var userCookie = ($.isNode() ? require('./xmyx_token.json') : $.getdata(ckName)) || '';
 let userList = [];
 let userIdx = 0;
 let userCount = 0;
@@ -66,20 +67,21 @@ async function main() {
     $.log('\n================== 任务 ==================\n');
     for (let user of userList) {
       console.log(`🔷账号${user.index} >> Start work`)
-      console.log(`随机延迟${user.getRandomTime()}ms`);
-      await user.signin();
-      await $.wait(user.getRandomTime());
+      const flag = await user.signin();
       if (user.ckStatus) {
         // 完成任务
-        for(let task of taskList) {
-          await user.tofinish(task.taskName, task.taskType);
-          await $.wait(1000 * task.time)
-          await user.completeTask(task.taskName, task.taskType);
-          await $.wait(user.getRandomTime());
+        if(flag) {
+          for(let task of taskList) {
+            await user.tofinish(task.taskName, task.taskType);
+            await $.wait(1000 * task.time)
+            await user.completeTask(task.taskName, task.taskType);
+            await $.wait(user.getRandomTime());
+          }
         }
         // 查询用户信息
         const { score, level, userName, avatar } = await user. getUserInfo() ?? {};
         user.avatar = avatar;
+        await user.refreshToken(user.token);
         $.title = `今日任务已全部完成`;
         DoubleLog(`「${userName}」积分: ${score}, 等级: ${level}`);
       } else {
@@ -152,9 +154,13 @@ class UserInfo {
       }
       const res = await this.fetch(opts);
       const {signPop} = res?.data;
-      const point = signPop ? signPop?.signPoint : 0;
+      const point = signPop ? signPop[0]?.signPoint : 0;
       debug(res, `今日签到`)
       $.log(`✅ ${res?.code == '200' ? point == 0 ? '今日已签到，请勿重复执行' : `签到完成, 获取积分: ${point}分` : res?.msg}\n`);
+      if(res?.code == '200' && point == 0) {
+        return false
+      }
+      return true
     } catch (e) {
       this.ckStatus = false;
       $.log(`⛔️ 执行任务今日签到失败! ${e}`);
@@ -253,6 +259,41 @@ class UserInfo {
       $.log(`⛔️ 查询用户信息失败! ${e}`);
     }
   }
+  // 刷新token
+  async refreshToken(token) {
+    try {
+      const { fhNonceStr, fhTimestamp, fhSign } = getSignature2();
+      const options = {
+        url: `https://mom.feihe.com/program/token/refreshToken`,
+        type: "get",
+        headers: {
+          "Host": "mom.feihe.com",
+          "token": token,
+          "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x1800302b) NetType/4G Language/zh_CN",
+          "Referer": "https://servicewechat.com/wx4205ec55b793245e/215/page-frame.html",
+          "fhAppid": 'xmh',
+          "source": 1,
+          fhNonceStr,
+          fhTimestamp,
+          fhSign
+        }
+      };
+      //post方法
+      let result = await Request(options);
+      let refreshToken = result?.data;
+      for(let i = 0; i < userCookie.length; i++) {
+        if(userCookie[i].userId === this.userId) {
+          userCookie[i].token = refreshToken;
+        }
+      }
+      $.isNode() ? require('fs').writeFileSync('./xmyx_token.json', JSON.stringify(userCookie)) : $.setdata(JSON.stringify(userCookie), ckName);
+      $.log(`🎉 刷新 token 成功\n`)
+      debug(result, '获取token');
+      // return refreshToken;
+    } catch (e) {
+      $.log(`⛔️ 刷新 Token 失败: ${e}`)
+    }
+  }
 }
 async function getCookie() {
   if ($request && $request.method === 'OPTIONS') return;
@@ -320,34 +361,7 @@ async function getWxToken(code) {
     $.log(`❌getWxToken run error => ${e}`)
   }
 }
-// 刷新token
-async function refreshToken(data) {
-  try {
-    const { fhNonceStr, fhTimestamp, fhSign } = getSignature2();
-    const options = {
-      url: `https://mom.feihe.com/program/token/refreshToken`,
-      type: "get",
-      headers: {
-        "Host": "mom.feihe.com",
-        "token": data,
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.48(0x1800302b) NetType/4G Language/zh_CN",
-        "Referer": "https://servicewechat.com/wx4205ec55b793245e/215/page-frame.html",
-        "fhAppid": 'xmh',
-        "source": 1,
-        fhNonceStr,
-        fhTimestamp,
-        fhSign
-      }
-    };
-    //post方法
-    let result = await Request(options);
-    let token = result?.data;
-    debug(result, '获取token');
-    return token;
-  } catch (e) {
-    $.log(`❌getWxToken run error => ${e}`)
-  }
-}
+
 //检查code服务器
 async function checkCodeServer(appid) {
   // 环境变量
@@ -388,15 +402,15 @@ async function checkCodeServer(appid) {
 }
 //检查环境变量
 async function checkEnv() {
+
   try {
-    let usersToAdd = await checkCodeServer($.appid) || [];
+    let usersToAdd = [];
 
     if (!usersToAdd.length) {
       const e = envSplitor.find(o => userCookie.includes(o)) || envSplitor[0];
-      userCookie = $.toObj(userCookie) || userCookie.split(e);
+      userCookie = Array.isArray(userCookie) ? userCookie : $.toObj(userCookie);
       usersToAdd = userCookie;
     }
-
     userList.push(...usersToAdd.map(n => new UserInfo(n)).filter(Boolean));
 
     userCount = userList.length;
