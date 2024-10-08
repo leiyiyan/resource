@@ -1,7 +1,7 @@
 /*
 ------------------------------------------
 @Author: Leiyiyan
-@Date: 2024-04-08 13:28:00
+@Date: 2024-10-08 11:25:00
 @Description: 龙湖天街小程序签到、抽奖
 ------------------------------------------
 获取 Cookie：打开龙湖天街小程序，进入 我的 - 签到赚珑珠 - 任务赚奖励 - 马上签到。
@@ -142,7 +142,7 @@ async function lotterySignin(user) {
             dataType: "json",
             body: {
                 "task_id": "",
-                "activity_no": "11111111111717126590660327170000"
+                "activity_no": "11111111111727686365925771280000"
             }
         }
         let res = await fetch(opts);
@@ -173,7 +173,7 @@ async function lotteryClock(user) {
             body: {
                 "task_id": "",
                 "time": getDateTime(),
-                "activity_no": "11111111111717126590660327170000",
+                "activity_no": "11111111111727686365925771280000",
                 "use_luck": 0
             }
         }
