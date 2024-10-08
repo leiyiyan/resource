@@ -3,7 +3,7 @@
  * 活动规则：完成每日任务
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-06-06 11:05
+ * 更新时间：2024-10-08 10:58
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -72,10 +72,10 @@ script-providers:
     // 主函数
     async function main() {
       // 获取微信 Code
-      await getWxCode();
-      for (let i = 0; i < $.codeList.length; i++) {
-        await getToken($.codeList[i]);  // 获取 Token
-      }
+      // await getWxCode();
+      // for (let i = 0; i < $.codeList.length; i++) {
+      //   await getToken($.codeList[i]);  // 获取 Token
+      // }
     
       if ($.userArr.length) {
         $.log(`✅ 找到:${$.userArr.length}个Token变量`);
@@ -188,7 +188,8 @@ script-providers:
             case 'n':  // 任务未完成
               for(let j = 0; j < totalCount - currentCount; j++) {
                 // 随机获取一个商铺 ID
-                const shopId = await getShops();
+                const {total} = await getShops()
+                const {shopId} = await getShops(total);
                 switch (taskName) {
                   case '浏览看铺':
                     await doTask(taskName, shopId, j + 1, totalCount, prizePrice, "SCEN_SACN", 'scanshop');
@@ -340,7 +341,7 @@ script-providers:
       }
     }
     // 随机获取一个商铺 ID
-    async function getShops() {
+    async function getShops(size=10) {
       let msg = '';
       // 构造请求
       let opt = {
@@ -352,7 +353,7 @@ script-providers:
           channelCode: "ch_xcx",
           data: {
             current: 1,
-            size: 2500,
+            size,
             thisUnitType: "1"
           },
           token: $.token
@@ -363,10 +364,12 @@ script-providers:
       var result = await Request(opt);
       if (result?.code == '200' && result?.data) {
         const { total, records } = result?.data;
-        const random = Math.floor(Math.random() * 2500)
+        const random = Math.floor(Math.random() * size)
         const shopId = records[random].id;
-        msg += `✅ 从${total}个商铺中随机获取一个商铺ID:${shopId}\n`;
-        return shopId;
+        if(size > 10) {
+          msg += `✅ 从${total}个商铺中随机获取一个商铺ID:${shopId}\n`;
+        }
+        return {total,shopId};
       } else {
         $.log(`查询商户列表失败 `);
       }
