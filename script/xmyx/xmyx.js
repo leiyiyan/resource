@@ -281,11 +281,8 @@ class UserInfo {
       //post方法
       let result = await Request(options);
       let refreshToken = result?.data;
-      for(let i = 0; i < userCookie.length; i++) {
-        if(userCookie[i].userId === this.userId) {
-          userCookie[i].token = refreshToken;
-        }
-      }
+      const index = userCookie.findIndex(e => e.userId == this.userId)
+      userCookie[index].token = refreshToken
       $.isNode() ? require('fs').writeFileSync('./xmyx_token.json', JSON.stringify(userCookie)) : $.setdata(JSON.stringify(userCookie), ckName);
       $.log(`🎉 刷新 token 成功\n`)
       debug(result, '获取token');
