@@ -49,7 +49,7 @@ $.orgid = '429605'
 $.csecversionname = '67.44.000'
 $.csecversion = '1.4.0'
 $.messages = [];
-$.campaignId = "1006191245";
+$.campaignId = "1006915695";
 
 // 主函数
 async function main() {
