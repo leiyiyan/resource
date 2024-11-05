@@ -3,7 +3,7 @@
  * 活动规则：完成每日任务
  * 脚本说明：添加重写进入"万达智慧商业"小程序-"我的"界面，即可获取 Token，支持多账号，兼容 NE / Node.js 环境。
  * 环境变量：wdzhsy_token / CODESERVER_ADDRESS、CODESERVER_FUN
- * 更新时间：2024-10-08 10:58
+ * 更新时间：2024-11-05 09:12
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png
 
 ------------------ Surge 配置 ------------------
@@ -12,7 +12,7 @@
 hostname = %APPEND% www.wandawic.com
 
 [Script]
-万达智慧商业² = type=http-response,pattern=^https?:\/\/www\.wandawic\.com\/api\/foreground\/loginregister\/queryUser,requires-body=1,max-size=0,binary-body-mode=0,timeout=30,script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js,script-update-interval=0
+万达智慧商业² = type=http-response,pattern=^https?:\/\/www\.wandawic\.com\/api\/wic\-member\-application\/api\/user\/queryUser,requires-body=1,max-size=0,binary-body-mode=0,timeout=30,script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js,script-update-interval=0
 
 万达智慧商业 = type=cron,cronexp=30 9 * * *,timeout=60,script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js,script-update-interval=0
 
@@ -22,7 +22,7 @@ hostname = %APPEND% www.wandawic.com
 hostname = www.wandawic.com
 
 [Script]
-http-response ^https?:\/\/www\.wandawic\.com\/api\/foreground\/loginregister\/queryUser tag=万达智慧商业²,script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js,requires-body=1
+http-response ^https?:\/\/www\.wandawic\.com\/api\/wic\-member\-application\/api\/user\/queryUser tag=万达智慧商业²,script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js,requires-body=1
 
 cron "30 9 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js,tag=万达智慧商业,enable=true
 
@@ -30,9 +30,8 @@ cron "30 9 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resourc
 
 [MITM]
 hostname = www.wandawic.com
-
 [rewrite_local]
-^https?:\/\/www\.wandawic\.com\/api\/foreground\/loginregister\/queryUser url script-response-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js
+^https?:\/\/www\.wandawic\.com\/api\/wic\-member\-application\/api\/user\/queryUser url script-response-body https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js
 
 [task_local]
 30 9 * * * https://raw.githubusercontent.com/leiyiyan/resource/main/script/wdzhsy/wdzhsy.js, tag=万达智慧商业, img-url=https://raw.githubusercontent.com/leiyiyan/resource/main/icons/wdzhsy.png, enabled=true
@@ -49,7 +48,7 @@ http:
   mitm:
     - "www.wandawic.com"
   script:
-    - match: ^https?:\/\/www\.wandawic\.com\/api\/foreground\/loginregister\/queryUser
+    - match: ^https?:\/\/www\.wandawic\.com\/api\/wic\-member\-application\/api\/user\/queryUser
       name: 万达智慧商业
       type: response
       require-body: true
