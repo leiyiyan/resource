@@ -1,7 +1,7 @@
 /*
 new Env('星妈优选');
 @Author: Leiyiyan
-@Date: 2024-10-08 15:05
+@Date: 2024-11-13 13:37
 
 @Description:
 星妈优选小程序 每日签到、任务
@@ -54,7 +54,9 @@ const appKey = 'TwUQ01lKS1Km5zlV2f7amsZc5EQYkTbv'
 const taskList = [
   { taskName: "浏览粮油专场10秒", taskType: "XXGG", time: 11 },
   { taskName: "浏览热销榜单10秒", taskType: "LLZTY", time: 11 },
-  { taskName: "浏览热销爆品", taskType: "TZSPXQ2", time: 3 },
+  { taskName: "浏览热销爆品1", taskType: "TZSPXQ2", time: 3 },
+  { taskName: "浏览热销爆品2", taskType: "TZSPXQ1", time: 3 },
+  { taskName: "精选超值好物", taskType: "LLQDYSPL", time: 3 },
   { taskName: "浏览视频10秒", taskType: "LLSP", time: 11 },
   { taskName: "打开签到提醒", taskType: "YXDY", time: 3 },
   { taskName: "大转盘抽奖", taskType: "YXDZP", time: 3 },
