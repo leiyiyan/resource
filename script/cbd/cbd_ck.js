@@ -39,12 +39,13 @@ async function getCookie() {
     if (typeof $request === "undefined" || $request.method === 'OPTIONS') return;
 
     const headers = ObjectKeys2LowerCase($request.headers);
-    const { csession, versionname, versioncode, referer } = headers
+    const { cookie, csession, versionname, versioncode, referer } = headers
     debug(csession, "获取到的csession如下");
     
     if (!csession) throw new Error(`⛔️ ${QL.envName}获取cookie失败!`);
     const user = {
         username: QL.username,
+        cookie,
         csession,
         versionname,
         versioncode,
