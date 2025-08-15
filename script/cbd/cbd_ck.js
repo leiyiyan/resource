@@ -40,13 +40,12 @@ async function getCookie() {
 
     const headers = ObjectKeys2LowerCase($request.headers);
     console.log(JSON.stringify(headers));
-    const { cookie, csession, versionname, versioncode, referer } = headers
+    const { csession, versionname, versioncode, referer } = headers
     debug(csession, "获取到的csession如下");
     
     if (!csession) throw new Error(`⛔️ ${QL.envName}获取cookie失败!`);
     const user = {
         username: QL.username,
-        cookie,
         csession,
         versionname,
         versioncode,
