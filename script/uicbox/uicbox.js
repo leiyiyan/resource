@@ -164,7 +164,7 @@ class UserInfo {
 async function getCookie() {
   if ($request && $request.method === 'OPTIONS') return;
   const body = $.toObj($response.body);
-  if (!(body?.data)) {
+  if (!(body?.obj)) {
     $.msg($.name, `❌获取Cookie失败!`, "")
     return;
   }
