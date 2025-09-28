@@ -11,7 +11,7 @@ new Env('维迈通多多');
 [Script]
 # 获取 Cookie
 
-http-response ^http?:\/\/eco\.trantor\.top\:8088\/ecosystem\/integral\/userIntegral\/myIntegral script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/vimoto/vimoto.js, requires-body=false, timeout=60, tag=维迈通多多Token
+http-request ^http?:\/\/eco\.trantor\.top\:8088\/ecosystem\/integral\/userIntegral\/myIntegral script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/vimoto/vimoto.js, requires-body=false, timeout=60, tag=维迈通多多Token
 
 # 脚本任务
 cron "0 7 * * *" script-path=https://raw.githubusercontent.com/leiyiyan/resource/main/script/vimoto/vimoto.js, tag=维迈通多多
