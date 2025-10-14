@@ -3,7 +3,7 @@
  * 活动规则：每日签到
  * 脚本说明：添加重写进入"柠季"小程序-顶部轮播图-4月签到界面，即可获取 Token，支持多账号，兼容🐉青龙。
  * 环境变量：ningji_data=[{"cardId": "抓包响应体cardId","campaignId":"抓包请求头campaignId","token": "抓包* 抓包请求头x-token"}]
- * 更新时间：2024-08-01 11:43
+ * 更新时间：2025-10-14 23:22
  * 图标地址：https://raw.githubusercontent.com/leiyiyan/resource/main/icons/ningji.png
 
 ------------------ Surge 配置 ------------------
@@ -49,7 +49,7 @@ $.orgid = '429605'
 $.csecversionname = '67.44.000'
 $.csecversion = '1.4.0'
 $.messages = [];
-$.campaignId = "1009416124";
+$.campaignId = "1009719221";
 
 // 主函数
 async function main() {
