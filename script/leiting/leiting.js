@@ -411,10 +411,12 @@ async function getCookie() {
     const header = ObjectKeys2LowerCase($request.headers);
     const token = header.token;
     const body = $.toObj($response.body);
-    const { nickName } = body?.data;
+    const nickName = body?.data?.nickName || "LEIYIYAN";
+    const refreshToken = body?.data?.refreshToken || "";
     const newData = {
         "token": token,
         "userName": nickName,
+        "refreshToken": refreshToken
     }
 
     userCookie = userCookie ? JSON.parse(userCookie) : [];
