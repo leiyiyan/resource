@@ -22,6 +22,9 @@ async function main() {
     try {
         for (let user of userList) {
             // console.log(`🚀 账号${user.index} >> 开始执行每日任务`)
+            console.log("📖 刷新Token")
+            await user.refresh();
+            await $.wait(user.getRandomTime());
             // 每日签到
             console.log("📖 任务1：每日签到")
             await user.sign();
@@ -47,6 +50,10 @@ async function main() {
                 console.log("📖 任务5：每周累计5天通过会员APP启动游戏")
                 await user.launchGame()
                 await $.wait(user.getRandomTime());
+                console.log("📖 查看可以领取的奖励")
+                await user.getTaskInfo();
+                console.log("📖 开始一键领取奖励")
+                await user.batchReceive();
             } else {
                 //将ck过期消息存入消息数组
                 $.notifyMsg.push(`⛔️ 账号${user.userName || user.index} >> Check ck error!`)
@@ -66,6 +73,7 @@ class UserInfo {
         //默认属性
         this.index = ++userIdx;
         this.token = user.token || user;
+        this.refreshToken = user.refreshToken
         this.userName = user.userName;
         this.ckStatus = true;
         //请求封装
@@ -96,6 +104,50 @@ class UserInfo {
                 this.ckStatus = false;
                 $.log(`⛔️ 请求发起失败！${e}`);
             }
+        }
+    }
+    //刷新Token
+    async refresh() {
+        try {
+            const timestamp = Date.now()
+            const opts = {
+                url: this.host + "/app/account/token/refresh",
+                method: "put",
+                headers: Object.assign(this.headers, {
+                    timestamp,
+                    sign: getSign(timestamp),
+                    'content-type': 'application/json'
+                }),
+                body: JSON.stringify({
+                refreshToken: this.refreshToken
+                })
+            }
+            let res = await new Promise((resolve, reject) => {
+                $.http['post'](opts)
+                .then((response) => {
+                    var resp = response.body;
+                    try {
+                        resp = $.toObj(resp) || resp;
+                    } catch (e) { }
+                    resolve(resp);
+                })
+                .catch((err) => reject(err));
+            });
+            if (res?.code == 2000) {
+                const index = userCookie.findIndex(e => e.userName == this.userName);
+                userCookie[index].refreshToken = res?.data?.refreshToken;
+                userCookie[index].token = res?.data?.accessToken;
+                this.token = res?.data?.accessToken;
+                this.refreshToken = res?.data?.refreshToken;
+                $.setjson(userCookie, ckName);
+                $.log(`✅ 刷新token: 成功`);
+            } else {
+                $.log(`⛔️ 刷新token失败`);
+    
+            }
+        } catch (e) {
+            this.ckStatus = false;
+            $.log(`⛔️ 刷新token失败! ${e}`);
         }
     }
     // 签到
@@ -279,6 +331,71 @@ class UserInfo {
         } catch (e) {
             this.ckStatus = false;
             $.log(`⛔️ 启动游戏失败! ${e}`);
+        }
+    }
+    // 查看任务完成情况
+    async getTaskInfo() {
+        try {
+            const timestamp = Date.now()
+            const opts = {
+                url: `/app2/outer/gift_package/1/list`,
+                type: "get",
+                headers: Object.assign(this.headers, {
+                    timestamp,
+                    sign: getSign(timestamp)
+                })
+            }
+            let res = await this.fetch(opts);
+            if (res?.code == 2000) {
+                const {classifyList} = res?.data;
+                // 活跃礼包
+                const giftList1 = classifyList[0]?.giftPackageList;
+                for(let i = 0; i < giftList1.length; i++) {
+                    if(giftList1[i]?.buttonState == 1) {
+                        console.log(`🎁 ${giftList1[i]?.desc}`);
+                    }
+                }
+                // 等级礼包
+                const giftList2 = classifyList[1]?.giftPackageList;
+                for(let i = 0; i < giftList2.length; i++) {
+                    if(giftList2[i]?.buttonState == 1) {
+                        console.log(`🎁 ${giftList2[i]?.desc}`);
+                    }
+                }
+            }else {
+                console.log("⛔️ 查看任务完成情况失败：" + res.msg);
+            }
+        } catch (e) {
+            this.ckStatus = false;
+            $.log(`⛔️ 查看任务完成情况失败! ${e}`);
+        }
+    }
+    // 一键领取
+    async batchReceive() {
+        try {
+            const timestamp = Date.now()
+            const opts = {
+                url: `/app2/outer/gift_package/1/batch_receive`,
+                type: "post",
+                dataType: "json",
+                headers: Object.assign(this.headers, {
+                    timestamp,
+                    sign: getSign(timestamp),
+                    'content-type': 'application/json'
+                }),
+                body: {
+                    bindingRecordId: "7080244"
+                }
+            }
+            let res = await this.fetch(opts);
+            if (res?.code == 2000) {
+                console.log("✅ 一键领取奖励：成功");
+            }else {
+                console.log("⛔️ 一键领取奖励失败：" + res.msg);
+            }
+        } catch (e) {
+            this.ckStatus = false;
+            $.log(`⛔️ 一键领取奖励失败! ${e}`);
         }
     }
 }
