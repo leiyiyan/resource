@@ -139,6 +139,7 @@ class UserInfo {
                 userCookie[index].token = res?.data?.accessToken;
                 this.token = res?.data?.accessToken;
                 this.refreshToken = res?.data?.refreshToken;
+                this.headers.token = res?.data?.accessToken;
                 $.setjson(userCookie, ckName);
                 $.log(`✅ 刷新token: 成功`);
             } else {
