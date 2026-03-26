@@ -57,7 +57,7 @@ async function main() {
                     await user.batchReceive();
                 }
                 $.title = `每日任务执行完毕`;
-                DoubleLog(`🎉 任务奖励已全部领取`);
+                // DoubleLog(`🎉 任务奖励已全部领取`);
             } else {
                 //将ck过期消息存入消息数组
                 $.notifyMsg.push(`⛔️ 账号${user.userName || user.index} >> Check ck error!`)
@@ -403,7 +403,7 @@ class UserInfo {
             }
             let res = await this.fetch(opts);
             if (res?.code == 2000) {
-                console.log("🎉 奖品已全部领取完毕");
+                console.log("🎉 任务奖励已全部领取");
             }else {
                 console.log("⛔️ 一键领取奖励失败：" + res.msg);
             }
