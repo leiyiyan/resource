@@ -22,7 +22,7 @@ async function main() {
     try {
         for (let user of userList) {
             // console.log(`🚀 账号${user.index} >> 开始执行每日任务`)
-            console.log("📖 刷新Token")
+            // console.log("📖 刷新Token")
             await user.refresh();
             await $.wait(user.getRandomTime());
             // 每日签到
@@ -50,10 +50,14 @@ async function main() {
                 console.log("📖 任务5：每周累计5天通过会员APP启动游戏")
                 await user.launchGame()
                 await $.wait(user.getRandomTime());
-                console.log("📖 查看可以领取的奖励")
-                await user.getTaskInfo();
-                console.log("📖 开始一键领取奖励")
-                await user.batchReceive();
+                console.log("🚀 查询可以领取的任务奖励")
+                const count = await user.getTaskInfo();
+                if(count > 0) {
+                    console.log("🚀 开始一键领取奖励")
+                    await user.batchReceive();
+                }
+                $.title = `每日任务执行完毕`;
+                DoubleLog(`🎉 任务奖励已全部领取`);
             } else {
                 //将ck过期消息存入消息数组
                 $.notifyMsg.push(`⛔️ 账号${user.userName || user.index} >> Check ck error!`)
@@ -141,7 +145,7 @@ class UserInfo {
                 this.refreshToken = res?.data?.refreshToken;
                 this.headers.token = res?.data?.accessToken;
                 $.setjson(userCookie, ckName);
-                $.log(`✅ 刷新token: 成功`);
+                // $.log(`✅ 刷新token: 成功`);
             } else {
                 $.log(`⛔️ 刷新token失败`);
     
@@ -167,7 +171,9 @@ class UserInfo {
             if (res?.code == 2000) {
                 const { name } = res?.data;
                 console.log(`✅ 每日签到：成功，获得 ${name}`);
-            }else {
+            } else if(res.msg.indexOf("重复签到") > -1) {
+                console.log(`✅ 每日签到：今日已签到过了`);
+            } else {
                 console.log("⛔️ 每日签到失败：" + res.msg);
             }
         } catch (e) {
@@ -337,6 +343,7 @@ class UserInfo {
     // 查看任务完成情况
     async getTaskInfo() {
         try {
+            let canReceiveCount = 0;
             const timestamp = Date.now()
             const opts = {
                 url: `/app2/outer/gift_package/1/list`,
@@ -353,6 +360,7 @@ class UserInfo {
                 const giftList1 = classifyList[0]?.giftPackageList;
                 for(let i = 0; i < giftList1.length; i++) {
                     if(giftList1[i]?.buttonState == 1) {
+                        canReceiveCount++;
                         console.log(`🎁 ${giftList1[i]?.desc}`);
                     }
                 }
@@ -360,9 +368,14 @@ class UserInfo {
                 const giftList2 = classifyList[1]?.giftPackageList;
                 for(let i = 0; i < giftList2.length; i++) {
                     if(giftList2[i]?.buttonState == 1) {
+                        canReceiveCount++;
                         console.log(`🎁 ${giftList2[i]?.desc}`);
                     }
                 }
+                if(canReceiveCount == 0) {
+                    console.log("🎉 奖品已全部领取完毕")
+                };
+                return canReceiveCount;
             }else {
                 console.log("⛔️ 查看任务完成情况失败：" + res.msg);
             }
@@ -390,7 +403,7 @@ class UserInfo {
             }
             let res = await this.fetch(opts);
             if (res?.code == 2000) {
-                console.log("✅ 一键领取奖励：成功");
+                console.log("🎉 奖品已全部领取完毕");
             }else {
                 console.log("⛔️ 一键领取奖励失败：" + res.msg);
             }
