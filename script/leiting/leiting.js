@@ -85,7 +85,6 @@ class UserInfo {
         this.host = "https://ltcapi.leiting.com/api";
         this.headers = {
             'token': this.token,
-            'guestid': '935296705350422',
             'User-Agent': 'Rastar/4.7.0 (iPhone; iOS 16.6; Scale/3.00)',
             'version': '4.7.0',
             'clienttype': 'iOS',
