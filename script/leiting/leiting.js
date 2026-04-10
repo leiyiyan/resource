@@ -52,9 +52,22 @@ async function main() {
                 await $.wait(user.getRandomTime());
                 console.log("🚀 查询可以领取的任务奖励")
                 const count = await user.getTaskInfo();
+                await $.wait(user.getRandomTime());
                 if(count > 0) {
                     console.log("🚀 开始一键领取奖励")
                     await user.batchReceive();
+                }
+                console.log("🚀 查询可以领取的邮件奖励")
+                const receiveList = await user.getMessageRewards();
+                await $.wait(user.getRandomTime());
+                if(receiveList.length) {
+                    for(let i = 0; i < receiveList.length; i++) {
+                        let msgId = receiveList[i].key;
+                        let msgTitle = receiveList[i].title;
+                        const userData = await user.checkLogin(msgId);
+                        await $.wait(user.getRandomTime());
+                        await user.receiveMessageReward(msgId, msgTitle, userData);
+                    }
                 }
                 $.title = `每日任务执行完毕`;
                 DoubleLog(`🎉 任务奖励已全部领取`);
@@ -85,6 +98,7 @@ class UserInfo {
         this.host = "https://ltcapi.leiting.com/api";
         this.headers = {
             'token': this.token,
+            'guestid': '935296705350422',
             'User-Agent': 'Rastar/4.7.0 (iPhone; iOS 16.6; Scale/3.00)',
             'version': '4.7.0',
             'clienttype': 'iOS',
@@ -383,6 +397,73 @@ class UserInfo {
             $.log(`⛔️ 查看任务完成情况失败! ${e}`);
         }
     }
+    // 查看消息奖励
+    async getMessageRewards() {
+        try {
+            let canReceiveCount = 0;
+            const timestamp = Date.now()
+            const opts = {
+                url: `/app/message/message/103/1`,
+                type: "get",
+                headers: Object.assign(this.headers, {
+                    timestamp,
+                    sign: getSign(timestamp)
+                }),
+                params: {
+                    current: 1,
+                    size: 99
+                }
+            }
+            let res = await this.fetch(opts);
+            if (res?.code == 2000) {
+                // 待领取列表
+                const receiveList = [];
+                const {records} = res?.data;
+                for(let i = 0; i < records.length; i++) {
+                    if(records[i].receiveState == false) {
+                        receiveList.push(records[i]);
+                    }
+                    console.log(`🎁 ${records[i]?.title} - ${records[i].receiveState ? "已领取" : "未领取"}`);
+                }
+                // if(!receiveList.length) {
+                //     console.log("🎉 消息奖品已全部领取完毕")
+                // };
+                return receiveList;
+            }else {
+                console.log("⛔️ 查看消息奖品失败：" + res.msg);
+            }
+        } catch (e) {
+            this.ckStatus = false;
+            $.log(`⛔️ 查看消息奖品失败! ${e}`);
+        }
+    }
+    // 检查登录状态
+    async checkLogin(msgId) {
+        try {
+            const timestamp = Date.now()
+            const opts = {
+                url: `/micro/msg_page/checkLogin`,
+                type: "get",
+                headers: Object.assign(this.headers, {
+                    timestamp,
+                    sign: getSign(timestamp)
+                }),
+                params: {
+                    type: 1,
+                    msgId
+                }
+            }
+            let res = await this.fetch(opts);
+            if (res?.code == 2000) {
+                return res?.data
+            }else {
+                console.log("⛔️ 检查登录状态失败：" + res.msg);
+            }
+        } catch (e) {
+            this.ckStatus = false;
+            $.log(`⛔️ 检查登录状态失败! ${e}`);
+        }
+    }
     // 一键领取
     async batchReceive() {
         try {
@@ -402,13 +483,50 @@ class UserInfo {
             }
             let res = await this.fetch(opts);
             if (res?.code == 2000) {
-                console.log("🎉 任务奖励已全部领取");
+                console.log("🎉 奖品已全部领取完毕");
             }else {
                 console.log("⛔️ 一键领取奖励失败：" + res.msg);
             }
         } catch (e) {
             this.ckStatus = false;
             $.log(`⛔️ 一键领取奖励失败! ${e}`);
+        }
+    }
+    // 分享
+    async receiveMessageReward(msgId, msgTitle, userData) {
+        try {
+            const timestamp = Date.now()
+            const opts = {
+                url: `/micro/msg_page/receive`,
+                type: "post",
+                dataType: "json",
+                headers: Object.assign(this.headers, {
+                    timestamp,
+                    sign: getSign(timestamp),
+                    'content-type': 'application/json'
+                }),
+                body: {
+                    gameCode: userData?.gameCode,
+                    serverId: userData?.binding?.serverId,
+                    serverName: userData?.binding?.serverName,
+                    rid: userData?.binding?.rid.split("[")[0],
+                    channelNo: userData?.binding?.rid.split("]")[1],
+                    type: userData?.binding?.serverType,
+                    msgId,
+                    roleNickname: userData?.binding?.roleNickname
+                }
+            }
+            let res = await this.fetch(opts);
+            console.log(JSON.stringify(res));
+            
+            if (res?.code == 2000) {
+                console.log(`✅ ${msgTitle}领取成功, 获得奖励：钻石x5，电池包x1`);
+            }else {
+                console.log(`✅ ${msgTitle} - 已领取`);
+            }
+        } catch (e) {
+            this.ckStatus = false;
+            $.log(`⛔️ ${msgTitle}领取失败! ${e}`);
         }
     }
 }
