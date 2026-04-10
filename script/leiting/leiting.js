@@ -57,7 +57,7 @@ async function main() {
                     console.log("🚀 开始一键领取奖励")
                     await user.batchReceive();
                 }
-                console.log("🚀 查询可以领取的邮件奖励")
+                console.log("🚀 查询可以领取的消息奖励")
                 const receiveList = await user.getMessageRewards();
                 await $.wait(user.getRandomTime());
                 if(receiveList.length) {
@@ -70,7 +70,7 @@ async function main() {
                     }
                 }
                 $.title = `每日任务执行完毕`;
-                DoubleLog(`🎉 任务奖励已全部领取`);
+                DoubleLog(`🎉 所有奖励已全部领取`);
             } else {
                 //将ck过期消息存入消息数组
                 $.notifyMsg.push(`⛔️ 账号${user.userName || user.index} >> Check ck error!`)
@@ -483,7 +483,7 @@ class UserInfo {
             }
             let res = await this.fetch(opts);
             if (res?.code == 2000) {
-                console.log("🎉 奖品已全部领取完毕");
+                console.log("🎉 任务奖品已全部领取完毕");
             }else {
                 console.log("⛔️ 一键领取奖励失败：" + res.msg);
             }
@@ -517,8 +517,6 @@ class UserInfo {
                 }
             }
             let res = await this.fetch(opts);
-            console.log(JSON.stringify(res));
-            
             if (res?.code == 2000) {
                 console.log(`✅ ${msgTitle}领取成功, 获得奖励：钻石x5，电池包x1`);
             }else {
