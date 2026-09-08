@@ -24,7 +24,7 @@ PingMe 每日签到 + 看视频领金币，支持多账号。
 // env.js 全局
 const $ = new Env("PingMe");
 const ckName = "pingme_accounts_v1";
-var userCookie = ($.isNode() ? JSON.parse(process.env[ckName]) : $.getdata(ckName)) || '';
+var userCookie = ($.isNode() ? JSON.parse(process.env[ckName]) : JSON.parse($.getdata(ckName))) || '';
 //-------------------- 一般不动变量区域 -------------------------------------
 const Notify = 1; //0为关闭通知,1为打开通知,默认为1
 let notify = '';
