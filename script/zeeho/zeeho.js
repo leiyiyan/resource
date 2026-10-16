@@ -87,28 +87,29 @@ if(prizes >= 30) {
 
 }
 
-        // 补签：把本月漏签的日期用补签卡补上（无卡时按需用100积分兑换）
+        // 补签：仅当本月漏签恰好 1 天时才补（漏签 >1 天补一天也接不回连签，不补）
         const missedDays = await user.getMissedDays()
-        if (missedDays.length) {
-          $.log(`ℹ️ 检测到本月漏签 ${missedDays.length} 天: ${missedDays.join(', ')}`)
+        if (missedDays.length === 1) {
+          const day = missedDays[0]
+          $.log(`ℹ️ 本月漏签 1 天: ${day}`)
           let cards = await user.getSupplementCount()
-          for (const day of missedDays) {
-            if (cards <= 0) {
-              if (!autoExchangeSupplementCard) {
-                $.log(`⚠️ 无补签卡，已跳过补签（autoExchangeSupplementCard=false）`)
-                break
-              }
+          if (cards <= 0) {
+            if (!autoExchangeSupplementCard) {
+              $.log(`⚠️ 无补签卡，已跳过补签（autoExchangeSupplementCard=false）`)
+            } else {
               const ok = await user.exchangeSupplementCard()
-              if (!ok) break
-              await $.wait(user.getRandomTime())
-              cards = await user.getSupplementCount()
-              if (cards <= 0) break
+              if (ok) {
+                await $.wait(user.getRandomTime())
+                cards = await user.getSupplementCount()
+              }
             }
-            await $.wait(user.getRandomTime())
-            const done = await user.supplement(day)
-            if (done) cards--
-            else break
           }
+          if (cards > 0) {
+            await $.wait(user.getRandomTime())
+            await user.supplement(day)
+          }
+        } else if (missedDays.length > 1) {
+          $.log(`ℹ️ 本月漏签 ${missedDays.length} 天（>1），不补签`)
         }
 
         // 创建动态
@@ -193,15 +194,16 @@ class UserInfo {
     try {
       const today = todayStr()
       const month = today.slice(0, 7)
-      const infoOpts = {
+      // 每次调用重新签名（复用旧 nonce/timestamp 会被判 430 permit error）
+      const buildInfo = () => ({
         url: "https://h5.zeehoev.com/cfmotoservermine/H5/signin/info",
         type: "get",
         headers: Object.assign({}, this.headers, getSign('h5', { month })),
         params: { month },
         dataType: "json"
-      }
+      })
       // 1) 先查今日是否已签
-      const info = await this.fetch(infoOpts)
+      const info = await this.fetch(buildInfo())
       const todayEntry = (info?.data?.nowSignDetailVos || []).find(x => x.createDate === today)
       if (todayEntry && (todayEntry.signStatue === 3 || todayEntry.signStatue === 5)) {
         $.log(`✅ 签到任务: 今日已签到`)
@@ -217,12 +219,16 @@ class UserInfo {
       }
       let res = await this.fetch(opts);
       if (res?.code == '10000' && res?.message == '操作成功') {
-        // 3) 回查今日积分
-        const info2 = await this.fetch(infoOpts)
+        // 3) 回查今日积分（重新签名）
+        const info2 = await this.fetch(buildInfo())
         const te = (info2?.data?.nowSignDetailVos || []).find(x => x.createDate === today)
         const point = te?.integralScore ? Number(te.integralScore) : 0
         $.log(point > 0 ? `✅ 签到任务: 签到成功 +${point}积分` : `✅ 签到任务: 今日已签到`)
         return point
+      } else if (res?.code == 'repeatedly_operation') {
+        // 重复提交（已签过），按已签到处理
+        $.log(`✅ 签到任务: 今日已签到`)
+        return null
       } else {
         $.log(`⛔️ 签到任务: ${res?.message}`);
         return null
@@ -467,7 +473,7 @@ class UserInfo {
   // 获取动态列表
   async getArticles() {
     try {
-      const opts = {
+      const buildOpts = () => ({
         url: `https://tapi.zeehoev.com/v1.0/social/cfmotoserversocial/community/mineArticleInfo`,
         type: "get",
         headers: Object.assign({}, this.headers, getSign('app')),
@@ -477,11 +483,12 @@ class UserInfo {
           page: 1,
           pageSize: 10
         }
-      }
+      })
       let res = null
-      // 40000「网络开小差了」多为限流/瞬时抖动，重试 3 次
+      // 40000「网络开小差了」多为限流/瞬时抖动，重试 3 次（每次必须重新签名，
+      // 否则复用旧 nonce/timestamp 会被服务端判 430 permit error）
       for (let i = 1; i <= 3; i++) {
-        res = await this.fetch(opts)
+        res = await this.fetch(buildOpts())
         if (res?.code == '10000') break
         $.log(`⚠️ 获取动态失败(${i}/3): ${res?.message || '无响应'}`)
         if (i < 3) await $.wait(1500 * i)
