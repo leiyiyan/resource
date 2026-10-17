@@ -478,27 +478,34 @@
       ]
     },
     {
-      "id": "Leiyiyan_iios",
-      "name": "iios-苹果软件站",
+      "id": "Leiyiyan_Airvoy",
+      "name": "Airvoy",
       "author": "@leiyiyan",
       "repo": "",
       "icons": [
-        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/iios.png",
-        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/iios.png"
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/airvoy.png",
+        "https://raw.githubusercontent.com/leiyiyan/resource/main/icons/airvoy.png"
       ],
       "keys": [
-        "iios_data"
+        "is_debug",
+        "airvoy_data"
       ],
       "settings": [
         {
-          "id": "iios_data",
-          "name": "账号信息",
+          "id": "is_debug",
+          "name": "开启调试模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认关闭"
+        },{
+          "id": "airvoy_data",
+          "name": "Airvoy Cookie",
           "val": null,
           "type": "textarea",
           "autoGrow": true,
-          "desc": "账号信息"
+          "desc": "Airvoy Cookie"
         }
       ]
-    }
+    },
   ]
 }
