@@ -1,7 +1,7 @@
 /*
 new Env('春风摩托');
 @Author: Leiyiyan
-@Date: 2024-06-12 09:55
+@Date: 2026-10-19 20:20
 
 @Description:
 春风摩托 每日签到、会员任务，积分可兑换实物
@@ -61,9 +61,15 @@ $.notifyMsg = [];
 async function main() {
   try {
     $.log('\n================== 任务 ==================\n');
+    //所有账号累计获得的积分，用于汇总通知标题
+    let gainedTotal = 0;
     for (let user of userList) {
       console.log(`🔷账号${user.index} >> Start work`)
       console.log(`随机延迟${user.getRandomTime()}ms`);
+      // 签到前先查一次积分，用于算实际增量
+      const infoBefore = await user.getSignInfo();
+      const integralBefore = parseFloat(infoBefore?.integralDisposable) || 0;
+      if (user.ckStatus) await $.wait(user.getRandomTime());
       // 签到
       const integral = await user.signin();
       if (user.ckStatus) {
@@ -97,17 +103,29 @@ async function main() {
           await user.deletePost(postId)
           await $.wait(user.getRandomTime());
         }
-        //查询待领取积分
-        const integralTotal = await user.getSignInfo();
-        $.title = `本次运行共获得${(integral + 36)}积分`;
-        DoubleLog(`「${user.userName}」当前积分:${integralTotal}分,累计签到:${count}天`);
+        //查询签到后的积分
+        const infoAfter = await user.getSignInfo();
+        //可用积分：App 首页显示的就是 integralDisposable
+        const integralTotal = parseFloat(infoAfter?.integralDisposable) || 0;
+        //实际获得的积分 = 签到后 - 签到前，通知里不再写死数值
+        const gained = integralTotal - integralBefore;
+        gainedTotal += gained > 0 ? gained : 0;
+        //本月即将过期积分，只在有值时显示
+        const overdue = parseFloat(infoAfter?.overdueIntegral) || 0;
+        const overdueStr = overdue > 0 ? `,月底过期:${overdue}分` : '';
+        DoubleLog(`「${user.userName}」当前积分:${integralTotal}分${overdueStr},累计签到:${count}天`);
       } else {
-        //将ck过期消息存入消息数组
-        $.notifyMsg.push(`❌账号${user.userName || user.index} >> Check ck error!`)
+        //将ck过期消息存入汇总消息数组
+        $.notifyMsg.push(`「${user.userName || user.index}」CK已失效`)
       }
-      //账号通知
-      $.notifyList.push({ "id": user.index, "avatar": user.avatar, "message": $.notifyMsg });
-      //清空数组
+      //账号间用空行分隔，通知内容统一汇总
+      $.notifyMsg.push(``);
+    }
+    //所有账号只汇总成一条通知
+    if ($.notifyMsg.length) {
+      //标题固定为脚本名，详细数据放正文
+      $.title = $.name;
+      $.notifyList.push({ "id": 0, "avatar": userList[0]?.avatar, "message": $.notifyMsg });
       $.notifyMsg = [];
     }
   } catch (e) {
@@ -177,8 +195,8 @@ class UserInfo {
       });
       if (res.code == 0) {
         $.log(`✅ 签到任务: 已完成`);
-        const point = parseInt(res.data)
-        return point
+        // v1 接口的 data 是签到天数(不是积分)，积分以签到后查询到的用户积分为准
+        return parseInt(res.data) || 0
       } else {
         $.log(`✅ 签到任务: 今日已签到`);
         return null
@@ -349,8 +367,8 @@ class UserInfo {
       }
       let res = await this.fetch(opts);
       if (res.code == 0) {
-        const integralTotal = res.data.integralTotal
-        return integralTotal
+        // 返回完整字段：integralDisposable 是 App 显示的可用积分，integralTotal 含已过期部分
+        return res.data || null
       }
       return null
     } catch (e) {
@@ -581,6 +599,12 @@ function ObjectKeys2LowerCase(obj) { return Object.fromEntries(Object.entries(ob
 })()
   .catch(e => $.notifyMsg.push(e.message || e))
   .finally(async () => {
+    //异常时兜底，保证残留消息也能汇总成一条通知发出
+    if ($.notifyMsg.length) {
+      $.title = $.title || $.name;
+      $.notifyList.push({ "id": 0, "avatar": userList[0]?.avatar, "message": $.notifyMsg });
+      $.notifyMsg = [];
+    }
     await SendMsgList($.notifyList);
     $.done({ ok: 1 });
   });
